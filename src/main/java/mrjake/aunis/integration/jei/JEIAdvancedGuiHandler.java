@@ -9,17 +9,17 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 
 public class JEIAdvancedGuiHandler implements IAdvancedGuiHandler<GuiContainer> {
 
-	@Override
-	public Class<GuiContainer> getGuiContainerClass() {
-		return GuiContainer.class;
-	}
+  @Override
+  public Class<GuiContainer> getGuiContainerClass() {
+    return GuiContainer.class;
+  }
 
-	@Override
-	public List<Rectangle> getGuiExtraAreas(GuiContainer guiContainer) {
-		if (guiContainer instanceof TabbedContainerInterface) {
-			return ((TabbedContainerInterface) guiContainer).getGuiExtraAreas();
-		}
-		
-		return null;
-	}
+  @Override
+  public List<Rectangle> getGuiExtraAreas(GuiContainer guiContainer) {
+    if (guiContainer instanceof TabbedContainerInterface) {
+      return ((TabbedContainerInterface) guiContainer).getGuiExtraAreas();
+    }
+
+    return null;
+  }
 }

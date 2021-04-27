@@ -12,7 +12,6 @@
       "aunis:dhd/dhd_milkyway_press_7"
     ]
   },
-  
   "dhd_milkyway_press_brb": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.dhd_milkyway_press_brb",
@@ -20,7 +19,6 @@
       "aunis:dhd/dhd_milkyway_press_brb"
     ]
   },
-  
   "gate_milkyway_open": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_open",
@@ -28,7 +26,13 @@
       "aunis:gate/gate_milkyway_open"
     ]
   },
-  
+  "gate_pegasus_open": {
+    "category": "ambient",
+    "subtitle": "aunis.subtitle.gate_pegasus_open",
+    "sounds": [
+      "aunis:gate/gate_pegasus_open"
+    ]
+  },
   "gate_milkyway_close": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_close",
@@ -36,7 +40,6 @@
       "aunis:gate/gate_milkyway_close"
     ]
   },
-  
   "gate_milkyway_ring_roll": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_ring_roll",
@@ -44,7 +47,13 @@
       "aunis:gate/gate_milkyway_ring_roll"
     ]
   },
-  
+  "gate_pegasus_ring_roll": {
+    "category": "ambient",
+    "subtitle": "aunis.subtitle.gate_pegasus_ring_roll",
+    "sounds": [
+      "aunis:gate/gate_pegasus_ring_roll"
+    ]
+  },
   "gate_milkyway_dial_fail": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_dial_fail",
@@ -52,7 +61,6 @@
       "aunis:gate/gate_milkyway_dial_fail"
     ]
   },
-  
   "gate_milkyway_dial_fail_computer": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_dial_fail_computer",
@@ -60,15 +68,13 @@
       "aunis:gate/gate_milkyway_dial_fail_computer"
     ]
   },
-  
-   "gate_milkyway_incoming": {
+  "gate_milkyway_incoming": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_incoming",
     "sounds": [
       "aunis:gate/gate_milkyway_incoming"
     ]
   },
-  
   "wormhole_loop": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.wormhole_loop",
@@ -76,7 +82,6 @@
       "aunis:eh/wormhole_loop"
     ]
   },
-  
   "wormhole_go": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.wormhole_go",
@@ -91,7 +96,6 @@
       "aunis:eh/eh_go_8"
     ]
   },
-  
   "wormhole_flicker": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.wormhole_flicker",
@@ -99,7 +103,6 @@
       "aunis:eh/wormhole_flicker"
     ]
   },
-  
   "rings_transport": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.rings_transport",
@@ -107,7 +110,6 @@
       "aunis:transportrings/rings_transport"
     ]
   },
-  
   "rings_controller_button": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.rings_controller_button",
@@ -115,7 +117,6 @@
       "aunis:transportrings/rings_controller_button"
     ]
   },
-  
   "gate_milkyway_chevron_shut": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_chevron_shut",
@@ -125,7 +126,6 @@
       "aunis:gate/chevron/gate_milkyway_chevron_shut_3"
     ]
   },
-  
   "gate_milkyway_chevron_open": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_chevron_open",
@@ -135,7 +135,15 @@
       "aunis:gate/chevron/gate_milkyway_chevron_open_3"
     ]
   },
-  
+  "gate_pegasus_chevron_open": {
+    "category": "ambient",
+    "subtitle": "aunis.subtitle.gate_pegasus_chevron_open",
+    "sounds": [
+      "aunis:gate/chevron/gate_pegasus_chevron_open_1",
+      "aunis:gate/chevron/gate_pegasus_chevron_open_2",
+      "aunis:gate/chevron/gate_pegasus_chevron_open_3"
+    ]
+  },
   "gate_orlin_dial": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_orlin_dial",
@@ -143,7 +151,6 @@
       "aunis:gate/orlin/gate_orlin_dial"
     ]
   },
-  
   "gate_universe_dial_start": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_universe_dial_start",
@@ -151,7 +158,6 @@
       "aunis:gate/universe/gate_universe_dial_start"
     ]
   },
-  
   "gate_universe_roll": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_universe_roll",
@@ -159,7 +165,6 @@
       "aunis:gate/universe/gate_universe_roll"
     ]
   },
-  
   "gate_universe_chevron_lock": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_universe_chevron_lock",
@@ -167,7 +172,6 @@
       "aunis:gate/universe/gate_universe_chevron_lock"
     ]
   },
-  
   "gate_universe_fail": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_universe_fail",
@@ -175,7 +179,6 @@
       "aunis:gate/universe/gate_universe_fail"
     ]
   },
-  
   "gate_universe_chevron_top_lock": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_universe_chevron_top_lock",
@@ -183,7 +186,6 @@
       "aunis:gate/universe/gate_universe_chevron_top_lock"
     ]
   },
-  
   "gate_universe_open": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_universe_open",
@@ -191,7 +193,6 @@
       "aunis:gate/universe/gate_universe_open"
     ]
   },
-  
   "gate_universe_close": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_universe_close",
@@ -199,7 +200,6 @@
       "aunis:gate/universe/gate_universe_close"
     ]
   },
-  
   "beamer_start": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.beamer_start",
@@ -207,7 +207,6 @@
       "aunis:beamer/beamer_start"
     ]
   },
-  
   "beamer_stop": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.beamer_stop",
@@ -215,7 +214,6 @@
       "aunis:beamer/beamer_stop"
     ]
   },
-  
   "beamer_loop": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.beamer_loop",
@@ -223,7 +221,6 @@
       "aunis:beamer/beamer_loop"
     ]
   },
-  
   "page_flip": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.page_flip",

@@ -9,17 +9,17 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class JEINotebookCloneRecipe implements IRecipeWrapper {
-	
-	private static ItemStack output;
-	
-	static {
-		output = JEINotebookRecipe.PAGE1.copy();
-		output.setCount(2);
-	}
-	
-	@Override
-	public void getIngredients(IIngredients ingredients) {
-		ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(JEINotebookRecipe.PAGE1, new ItemStack(Items.PAPER)));
-		ingredients.setOutput(VanillaTypes.ITEM, output);
-	}
+
+  private static ItemStack output;
+
+  static {
+    output = JEINotebookRecipe.PAGE1.copy();
+    output.setCount(2);
+  }
+
+  @Override
+  public void getIngredients(IIngredients ingredients) {
+    ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(JEINotebookRecipe.PAGE1, new ItemStack(Items.PAPER)));
+    ingredients.setOutput(VanillaTypes.ITEM, output);
+  }
 }

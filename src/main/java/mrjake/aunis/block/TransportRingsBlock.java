@@ -22,71 +22,62 @@ import net.minecraft.world.World;
 
 public class TransportRingsBlock extends Block {
 
-private static final String blockName = "transportrings_block";
-	
-	public TransportRingsBlock() {	
-		super(Material.IRON);
-		
-		setRegistryName(Aunis.ModID + ":" + blockName);
-		setUnlocalizedName(Aunis.ModID + "." + blockName);
-		
-		setSoundType(SoundType.STONE); 
-		setCreativeTab(Aunis.aunisCreativeTab);
-		
-		setLightOpacity(0);
-		
-		setHardness(3.0f);
-		setHarvestLevel("pickaxe", 3);
-	}
-	
-	// ------------------------------------------------------------------------
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		TransportRingsTile ringsTile = (TransportRingsTile) world.getTileEntity(pos);
-		
-		if (!world.isRemote) {			
-//			if (player.getHeldItem(hand).getItem() == AunisItems.analyzerAncient)
-			AunisPacketHandler.INSTANCE.sendTo(new StateUpdatePacketToClient(pos, StateTypeEnum.GUI_STATE, ringsTile.getState(StateTypeEnum.GUI_STATE)), (EntityPlayerMP) player);
-		}
-		
-		return true;
-	}
-	
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		
-		TransportRingsTile ringsTile = (TransportRingsTile) world.getTileEntity(pos);
-		
-		if (!world.isRemote) {			
-			BlockPos closestController = LinkingHelper.findClosestUnlinked(world, pos, new BlockPos(10, 5, 10), AunisBlocks.TR_CONTROLLER_BLOCK);
-			
-			if (closestController != null) {
-				TRControllerTile controllerTile = (TRControllerTile) world.getTileEntity(closestController);
-				
-				controllerTile.setLinkedRings(pos);
-				ringsTile.setLinkedController(closestController);
-			}
-		}
-	}
-	
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		TransportRingsTile ringsTile = (TransportRingsTile) world.getTileEntity(pos);
+  private static final String blockName = "transportrings_block";
 
-		if (ringsTile.isLinked())
-			ringsTile.getLinkedControllerTile(world).setLinkedRings(null);
-		
-		ringsTile.removeAllRings();
-	}
-	
-	// ------------------------------------------------------------------------
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
-	
-	@Override
-	public TransportRingsTile createTileEntity(World world, IBlockState state) {
-		return new TransportRingsTile();
-	}
+  public TransportRingsBlock() {
+    super(Material.IRON);
+
+    setRegistryName(Aunis.ModID + ":" + blockName);
+    setUnlocalizedName(Aunis.ModID + "." + blockName);
+
+    setSoundType(SoundType.STONE);
+    setCreativeTab(Aunis.aunisCreativeTab);
+
+    setLightOpacity(0);
+
+    setHardness(3.0f);
+    setHarvestLevel("pickaxe", 3);
+  }
+
+  // ------------------------------------------------------------------------
+  @Override
+  public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    TransportRingsTile ringsTile = (TransportRingsTile) world.getTileEntity(pos);
+
+    if (!world.isRemote) {
+      //			if (player.getHeldItem(hand).getItem() == AunisItems.analyzerAncient)
+      AunisPacketHandler.INSTANCE.sendTo(new StateUpdatePacketToClient(pos, StateTypeEnum.GUI_STATE, ringsTile.getState(StateTypeEnum.GUI_STATE)), (EntityPlayerMP) player);
+    }
+
+    return true;
+  }
+
+  @Override
+  public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+    TransportRingsTile ringsTile = (TransportRingsTile) world.getTileEntity(pos);
+
+    if (!world.isRemote) {
+      ringsTile.updateLinkStatus();
+    }
+  }
+
+  @Override
+  public void breakBlock(World world, BlockPos pos, IBlockState state) {
+    TransportRingsTile ringsTile = (TransportRingsTile) world.getTileEntity(pos);
+
+    if (ringsTile.isLinked()) ringsTile.getLinkedControllerTile(world).setLinkedRings(null, -1);
+
+    ringsTile.removeAllRings();
+  }
+
+  // ------------------------------------------------------------------------
+  @Override
+  public boolean hasTileEntity(IBlockState state) {
+    return true;
+  }
+
+  @Override
+  public TransportRingsTile createTileEntity(World world, IBlockState state) {
+    return new TransportRingsTile();
+  }
 }
