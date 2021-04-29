@@ -405,7 +405,8 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
             break;
 
           case CLEAR_CHEVRONS:
-            getRendererStateClient().chevronTextureList.clearChevrons(world.getTotalWorldTime());
+
+            getRendererStateClient().clearChevrons(world.getTotalWorldTime());
             break;
 
           case LIGHT_UP_CHEVRONS:

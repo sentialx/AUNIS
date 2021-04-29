@@ -53,6 +53,10 @@ public class StargateClassicSpinHelper implements ISpinHelper {
     currentSymbol = symbol;
   }
 
+  public SymbolInterface getTargetSymbol() {
+    return targetSymbol;
+  }
+
   /**
    * First phase function (with default values).
    */

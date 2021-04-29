@@ -51,6 +51,10 @@ public abstract class StargateClassicRendererState extends StargateAbstractRende
     return super.getBiomeOverlay();
   }
 
+  public void clearChevrons(long time) {
+    chevronTextureList.clearChevrons(time);
+  }
+
   // ------------------------------------------------------------------------
   // Saving
 

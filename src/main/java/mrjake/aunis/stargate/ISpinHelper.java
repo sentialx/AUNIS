@@ -13,6 +13,8 @@ public interface ISpinHelper {
 
   void setCurrentSymbol(SymbolInterface symbol);
 
+  SymbolInterface getTargetSymbol();
+
   void initRotation(long totalWorldTime, SymbolInterface targetSymbol, EnumSpinDirection direction);
 
   float apply(double tick);

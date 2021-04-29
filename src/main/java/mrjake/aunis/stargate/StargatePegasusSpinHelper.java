@@ -1,6 +1,7 @@
 package mrjake.aunis.stargate;
 
 import io.netty.buffer.ByteBuf;
+import jdk.nashorn.internal.ir.Symbol;
 import mrjake.aunis.Aunis;
 import mrjake.aunis.stargate.network.SymbolInterface;
 import mrjake.aunis.stargate.network.SymbolTypeEnum;
@@ -47,6 +48,10 @@ public class StargatePegasusSpinHelper implements ISpinHelper {
 
   public void setCurrentSymbol(SymbolInterface symbol) {
     currentSymbol = symbol;
+  }
+
+  public SymbolInterface getTargetSymbol() {
+    return targetSymbol;
   }
 
   /**
@@ -118,32 +123,6 @@ public class StargatePegasusSpinHelper implements ISpinHelper {
   }
 
   public void initRotation(long totalWorldTime, SymbolInterface targetSymbol, EnumSpinDirection direction) {
-    float distance = direction.getDistance(currentSymbol, targetSymbol);
-
-    if (distance < 120) distance += 120;
-
-    float x0 = getx0(distance);
-    this.targetRotationOffset = getTargetRotation(x0);
-
-    phases.clear();
-
-    if (x0 < U_SPEEDUP_TIME) {
-      // Stop point occurs before ring reaches full speed
-      // Set x0 to arithmetic mean of 0 and x0+S_STOP_TIME (halfway between start and desired stop)
-      // Set u,s to x0
-      x0 = (x0 + S_STOP_TIME) / 2;
-
-      float a = distance / x0;
-      MathRangedFunction speedup = getSpeedupRangedFunction(a, x0);
-      phases.put(speedup.range, speedup.function);
-      phases.put(new MathRange(x0, x0 + x0), getStopFunction(a, x0, x0, x0)); // x0+s = x0+x0, u=s=x0
-    } else {
-      phases.put(SPEEDUP_PHASE_DEFAULT.range, SPEEDUP_PHASE_DEFAULT.function);
-
-      phases.put(new MathRange(U_SPEEDUP_TIME, x0), LINEAR_SPIN_FUNCTION_DEFAULT);
-      phases.put(new MathRange(x0, x0 + S_STOP_TIME), getStopFunction(A_ANGLE_PER_TICK, U_SPEEDUP_TIME, S_STOP_TIME, x0));
-    }
-
     this.targetSymbol = targetSymbol;
     this.direction = direction;
     this.spinStartTime = totalWorldTime;
@@ -157,16 +136,7 @@ public class StargatePegasusSpinHelper implements ISpinHelper {
       return 0;
     }
 
-    for (Map.Entry<MathRange, MathFunction> phase : phases.entrySet()) {
-      if (phase.getKey().test(tick)) {
-        return phase.getValue().apply(tick);
-      }
-    }
-
-    isSpinning = false;
-    currentSymbol = targetSymbol;
-
-    return targetRotationOffset;
+    return (tick) % 36;
   }
 
   public float apply(double tick) {

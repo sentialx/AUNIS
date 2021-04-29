@@ -8,6 +8,7 @@ import mrjake.aunis.config.StargateSizeEnum;
 import mrjake.aunis.packet.AunisPacketHandler;
 import mrjake.aunis.packet.StateUpdatePacketToClient;
 import mrjake.aunis.renderer.biomes.BiomeOverlayEnum;
+import mrjake.aunis.renderer.stargate.ChevronEnum;
 import mrjake.aunis.renderer.stargate.StargateAbstractRendererState;
 import mrjake.aunis.renderer.stargate.StargatePegasusRendererState;
 import mrjake.aunis.sound.SoundEventEnum;
@@ -15,6 +16,7 @@ import mrjake.aunis.sound.SoundPositionedEnum;
 import mrjake.aunis.sound.StargateSoundEventEnum;
 import mrjake.aunis.sound.StargateSoundPositionedEnum;
 import mrjake.aunis.stargate.EnumScheduledTask;
+import mrjake.aunis.stargate.EnumSpinDirection;
 import mrjake.aunis.stargate.EnumStargateState;
 import mrjake.aunis.stargate.StargatePegasusSpinHelper;
 import mrjake.aunis.stargate.merging.StargateAbstractMergeHelper;
@@ -417,8 +419,21 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
             getRendererStateClient().closeChevron(world.getTotalWorldTime());
             break;
 
+          case CHEVRON_ACTIVATE:
+            getRendererStateClient().spinHelper.setIsSpinning(false);
+            getRendererStateClient().lockChevron(getRendererStateClient().spinHelper.getTargetSymbol().getId(), getRendererStateClient().chevronTextureList.getNextChevron());
+
+            break;
+
           default:
             break;
+        }
+
+        break;
+
+      case SPIN_STATE:
+        if (getRendererStateClient().chevronTextureList.getNextChevron().rotationIndex == 1) {
+          getRendererStateClient().slotToGlyphMap.clear();
         }
 
         break;
@@ -428,6 +443,31 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
     }
 
     super.setState(stateType, state);
+  }
+
+  // TODO(sentialx): refactor
+  public int slotFromChevron(ChevronEnum chevron) {
+    switch (chevron.rotationIndex) {
+      case 0:
+        return 29;
+      case 1:
+        return 5;
+      case 2:
+        return 1;
+      case 3:
+        return 33;
+      case 4:
+        return 9;
+      case 5:
+        return 25;
+      case 6:
+        return 21;
+      case 7:
+        return 17;
+      case 8:
+        return 13;
+    }
+    return 0;
   }
 
   @Override
@@ -443,11 +483,15 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
     } else {
       spinDirection = spinDirection.opposite();
 
-      float distance = spinDirection.getDistance(currentRingSymbol, targetRingSymbol);
+      int indexDiff = slotFromChevron(ChevronEnum.valueOf(dialedAddress.size()));
 
-      if (distance < 120) distance += 120;
+      if (spinDirection != EnumSpinDirection.CLOCKWISE) indexDiff = 36 - indexDiff;
 
-      int duration = StargatePegasusSpinHelper.getAnimationDuration(distance);
+      float distance = (float) indexDiff;
+\
+      if (distance < 25) distance += 36;
+
+      int duration = (int) (distance);
 
       Aunis.logger.debug("addSymbolToAddressManual: " + "current:" + currentRingSymbol + ", " + "target:" + targetSymbol + ", " + "direction:" + spinDirection + ", " + "distance:" + distance + ", " + "duration:" + duration + ", " + "moveOnly:" + moveOnly);
 
@@ -468,6 +512,7 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
 
   // -----------------------------------------------------------------
   // Scheduled tasks
+
 
   @Override
   public void executeTask(EnumScheduledTask scheduledTask, NBTTagCompound customData) {
