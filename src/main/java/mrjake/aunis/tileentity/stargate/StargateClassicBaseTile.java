@@ -28,6 +28,7 @@ import mrjake.aunis.renderer.stargate.StargateClassicRendererState.StargateClass
 import mrjake.aunis.sound.StargateSoundEventEnum;
 import mrjake.aunis.sound.StargateSoundPositionedEnum;
 import mrjake.aunis.stargate.*;
+import mrjake.aunis.stargate.merging.StargateMilkyWayMergeHelper;
 import mrjake.aunis.stargate.network.*;
 import mrjake.aunis.stargate.power.StargateAbstractEnergyStorage;
 import mrjake.aunis.stargate.power.StargateClassicEnergyStorage;
@@ -167,11 +168,15 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
   public void onLoad() {
     super.onLoad();
 
+    lastPos = pos;
+
     if (!world.isRemote) {
       updateBeamers();
       updatePowerTier();
     }
   }
+
+  protected abstract boolean onGateMergeRequested();
 
   private BlockPos lastPos = BlockPos.ORIGIN;
 
@@ -183,6 +188,10 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
       if (!lastPos.equals(pos)) {
         lastPos = pos;
         generateAddresses(!hasUpgrade(StargateClassicBaseTile.StargateUpgradeEnum.CHEVRON_UPGRADE));
+
+        if (isMerged()) {
+          updateMergeState(onGateMergeRequested(), facing);
+        }
       }
 
       if (givePageTask != null) {
@@ -353,6 +362,10 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
     return RENDER_BOX;
   }
 
+  protected long getSpinStartOffset() {
+    return 0;
+  }
+
   // -----------------------------------------------------------------
   // States
 
@@ -448,7 +461,7 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
           getRendererStateClient().spinHelper.setIsSpinning(false);
           getRendererStateClient().spinHelper.setCurrentSymbol(spinState.targetSymbol);
         } else
-          getRendererStateClient().spinHelper.initRotation(world.getTotalWorldTime(), spinState.targetSymbol, spinState.direction);
+          getRendererStateClient().spinHelper.initRotation(world.getTotalWorldTime(), spinState.targetSymbol, spinState.direction, getSpinStartOffset());
 
         break;
 

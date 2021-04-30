@@ -411,8 +411,6 @@ public abstract class StargateAbstractBaseTile extends TileEntity implements Sta
   }
 
   public void setGateAddress(SymbolTypeEnum symbolType, StargateAddress stargateAddress) {
-    if (stargateAddress == null) return;
-
     network.removeStargate(gateAddressMap.get(symbolType));
 
     StargatePos gatePos = new StargatePos(world.provider.getDimension(), pos, stargateAddress);
@@ -647,6 +645,7 @@ public abstract class StargateAbstractBaseTile extends TileEntity implements Sta
   @Override
   public void onLoad() {
     if (!world.isRemote) {
+      lastPos = pos;
       updateFacing(world.getBlockState(pos).getValue(AunisProps.FACING_HORIZONTAL), true);
       network = StargateNetwork.get(world);
 
@@ -666,12 +665,11 @@ public abstract class StargateAbstractBaseTile extends TileEntity implements Sta
     Random random = new Random(pos.hashCode() * 31 + world.provider.getDimension());
 
     for (SymbolTypeEnum symbolType : SymbolTypeEnum.values()) {
-      StargateAddress address;
-      if (reset) {
+      StargateAddress address = getStargateAddress(symbolType);
+
+      if (gateAddressMap.get(symbolType) == null || reset) {
         address = new StargateAddress(symbolType);
         address.generate(random);
-      } else {
-        address = getStargateAddress(symbolType);
       }
 
       this.setGateAddress(symbolType, address);
@@ -1028,10 +1026,17 @@ public abstract class StargateAbstractBaseTile extends TileEntity implements Sta
       onGateMerged();
     }
 
+    if (this.isMerged == shouldBeMerged) {
+      if (shouldBeMerged) {
+        getMergeHelper().updateMembersBasePos(world, pos, facing);
+      }
+      return;
+    }
+
     this.isMerged = shouldBeMerged;
     IBlockState actualState = world.getBlockState(pos);
 
-    // When the block is destroyed, there will be air in this place and we cannot set it's block state
+    // When the block is destroyed, there will be air in this place and we cannot set its block state
     if (getMergeHelper().matchBase(actualState)) {
       world.setBlockState(pos, actualState.withProperty(AunisProps.RENDER_BLOCK, !shouldBeMerged), 2);
     }

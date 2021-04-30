@@ -314,9 +314,17 @@ public class StargateMilkyWayBaseTile extends StargateClassicBaseTile implements
     return pos.offset(EnumFacing.UP, 4);
   }
 
-  private boolean firstTick = true;
-
   private BlockPos lastPos = BlockPos.ORIGIN;
+
+  @Override
+  protected boolean onGateMergeRequested() {
+    if (stargateSize != AunisConfig.stargateSize) {
+      StargateMilkyWayMergeHelper.INSTANCE.convertToPattern(world, pos, facing, stargateSize, AunisConfig.stargateSize);
+      stargateSize = AunisConfig.stargateSize;
+    }
+
+    return StargateMilkyWayMergeHelper.INSTANCE.checkBlocks(world, pos, facing);
+  }
 
   @Override
   public void update() {
@@ -325,13 +333,6 @@ public class StargateMilkyWayBaseTile extends StargateClassicBaseTile implements
     if (!world.isRemote) {
       if (!lastPos.equals(pos)) {
         lastPos = pos;
-        if (isMerged()) {
-          // Doing this in onLoad causes ConcurrentModificationException
-          StargateMilkyWayMergeHelper.INSTANCE.convertToPattern(world, pos, facing, stargateSize, AunisConfig.stargateSize);
-          updateMergeState(StargateMilkyWayMergeHelper.INSTANCE.checkBlocks(world, pos, facing), facing);
-
-          stargateSize = AunisConfig.stargateSize;
-        }
 
         updateLinkStatus();
         markDirty();

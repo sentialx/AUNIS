@@ -126,7 +126,7 @@ public class StargateClassicSpinHelper implements ISpinHelper {
     this.spinStartTime = spinStartTime;
   }
 
-  public void initRotation(long totalWorldTime, SymbolInterface targetSymbol, EnumSpinDirection direction) {
+  public void initRotation(long totalWorldTime, SymbolInterface targetSymbol, EnumSpinDirection direction, float startOffset) {
     float distance = direction.getDistance(currentSymbol, targetSymbol);
 
     float x0 = getx0(distance);
@@ -203,7 +203,7 @@ public class StargateClassicSpinHelper implements ISpinHelper {
     targetSymbol = symbolType.valueOfSymbol(buf.readInt());
 
     if (isSpinning) {
-      initRotation(spinStartTime, targetSymbol, direction);
+      initRotation(spinStartTime, targetSymbol, direction, 0);
     }
   }
 }

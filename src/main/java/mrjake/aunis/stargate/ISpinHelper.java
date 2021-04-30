@@ -2,6 +2,7 @@ package mrjake.aunis.stargate;
 
 
 import io.netty.buffer.ByteBuf;
+import mrjake.aunis.renderer.stargate.ChevronEnum;
 import mrjake.aunis.stargate.network.SymbolInterface;
 
 public interface ISpinHelper {
@@ -15,7 +16,7 @@ public interface ISpinHelper {
 
   SymbolInterface getTargetSymbol();
 
-  void initRotation(long totalWorldTime, SymbolInterface targetSymbol, EnumSpinDirection direction);
+  void initRotation(long totalWorldTime, SymbolInterface targetSymbol, EnumSpinDirection direction, float startOffset);
 
   float apply(double tick);
 

@@ -87,10 +87,6 @@ public class StargatePegasusRenderer extends StargateClassicRenderer<StargatePeg
   // ----------------------------------------------------------------------------------------
   // Chevrons
 
-  private float calculateTopChevronOffset(StargatePegasusRendererState rendererState, double partialTicks) {
-    return 0;
-  }
-
   @Override
   protected void renderChevron(StargatePegasusRendererState rendererState, double partialTicks, ChevronEnum chevron) {
     GlStateManager.pushMatrix();
@@ -100,7 +96,7 @@ public class StargatePegasusRenderer extends StargateClassicRenderer<StargatePeg
     TextureLoader.getTexture(rendererState.chevronTextureList.get(rendererState.getBiomeOverlay(), chevron)).bindTexture();
 
     if (chevron.isFinal()) {
-      float chevronOffset = calculateTopChevronOffset(rendererState, partialTicks);
+      float chevronOffset = 0;
 
       GlStateManager.pushMatrix();
 
@@ -140,7 +136,7 @@ public class StargatePegasusRenderer extends StargateClassicRenderer<StargatePeg
 
     // Round is necessary here, since Minecraft doesn't handle many decimal places very well in this case,
     // so that the texture just ceases to exist.
-    GlStateManager.translate(NumberUtils.round(slotPos[0], 3), NumberUtils.round(slotPos[1], 3), 0.2);
+    GlStateManager.translate(NumberUtils.round(slotPos[0], 3), NumberUtils.round(slotPos[1], 3), 0.205);
     GlStateManager.rotate(90, 1, 0, 0);
 
     String path = String.format("pegasus/%s.png", dim ? "glyphs_off" : "glyphs");

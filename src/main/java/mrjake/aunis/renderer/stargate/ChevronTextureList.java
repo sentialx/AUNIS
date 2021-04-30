@@ -58,9 +58,13 @@ public class ChevronTextureList {
     }
   }
 
-  public ChevronEnum getNextChevron() {
-    if (activeChevrons.size() > 0) return activeChevrons.get(activeChevrons.size() - 1).getNext();
+  public ChevronEnum getCurrentChevron() {
+    if (activeChevrons.size() > 0) return activeChevrons.get(activeChevrons.size() - 1);
+    return ChevronEnum.C1;
+  }
 
+  public ChevronEnum getNextChevron() {
+    if (activeChevrons.size() > 0) return getCurrentChevron().getNext();
     return ChevronEnum.C1;
   }
 

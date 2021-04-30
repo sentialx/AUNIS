@@ -3,6 +3,7 @@ package mrjake.aunis.stargate;
 import io.netty.buffer.ByteBuf;
 import jdk.nashorn.internal.ir.Symbol;
 import mrjake.aunis.Aunis;
+import mrjake.aunis.renderer.stargate.ChevronEnum;
 import mrjake.aunis.stargate.network.SymbolInterface;
 import mrjake.aunis.stargate.network.SymbolTypeEnum;
 import mrjake.aunis.util.math.*;
@@ -32,7 +33,8 @@ public class StargatePegasusSpinHelper implements ISpinHelper {
 
   private long spinStartTime;
   private SymbolInterface targetSymbol;
-  private float targetRotationOffset;
+  private float startOffset;
+
 
   public boolean getIsSpinning() {
     return isSpinning;
@@ -122,10 +124,11 @@ public class StargatePegasusSpinHelper implements ISpinHelper {
     this.spinStartTime = spinStartTime;
   }
 
-  public void initRotation(long totalWorldTime, SymbolInterface targetSymbol, EnumSpinDirection direction) {
+  public void initRotation(long totalWorldTime, SymbolInterface targetSymbol, EnumSpinDirection direction, float startOffset) {
     this.targetSymbol = targetSymbol;
     this.direction = direction;
     this.spinStartTime = totalWorldTime;
+    this.startOffset = startOffset;
 
     isSpinning = true;
   }
@@ -140,8 +143,8 @@ public class StargatePegasusSpinHelper implements ISpinHelper {
   }
 
   public float apply(double tick) {
-    //		Aunis.info("("+tick+", "+calculate((float) tick) * direction.mul+")");
-    return calculate((float) (tick - spinStartTime)) * direction.mul;
+    float slot = calculate((float) tick - spinStartTime);
+    return ((direction.mul == -1 ? 36 - slot : slot) + startOffset) % 36;
   }
 
   public void toBytes(ByteBuf buf) {
@@ -166,7 +169,7 @@ public class StargatePegasusSpinHelper implements ISpinHelper {
     targetSymbol = symbolType.valueOfSymbol(buf.readInt());
 
     if (isSpinning) {
-      initRotation(spinStartTime, targetSymbol, direction);
+      initRotation(spinStartTime, targetSymbol, direction, 0);
     }
   }
 }

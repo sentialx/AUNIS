@@ -24,27 +24,7 @@ public class StargatePegasusRendererState extends StargateClassicRendererState {
 
   // TODO(sentialx): refactor
   public int slotFromChevron(ChevronEnum chevron) {
-    switch (chevron.rotationIndex) {
-      case 0:
-        return 29;
-      case 1:
-        return 5;
-      case 2:
-        return 1;
-      case 3:
-        return 33;
-      case 4:
-        return 9;
-      case 5:
-        return 25;
-      case 6:
-        return 21;
-      case 7:
-        return 17;
-      case 8:
-        return 13;
-    }
-    return 0;
+    return new int[]{9, 5, 1, 33, 29, 25, 21, 17, 13}[chevron.rotationIndex];
   }
 
   public void setGlyphAtSlot(int glyphId, int slot) {

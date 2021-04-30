@@ -47,7 +47,6 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class StargatePegasusBaseTile extends StargateClassicBaseTile implements ILinkable {
-
   // ------------------------------------------------------------------------
   // Stargate state
 
@@ -96,6 +95,7 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
   protected AunisAxisAlignedBB getHorizonTeleportBox(boolean server) {
     return getStargateSizeConfig(server).teleportBox;
   }
+
 
   public void addSymbolToAddressDHD(SymbolMilkyWayEnum symbol) {
     addSymbolToAddress(symbol);
@@ -309,26 +309,9 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
     return pos.offset(EnumFacing.UP, 4);
   }
 
-  private BlockPos lastPos = BlockPos.ORIGIN;
-
   @Override
-  public void update() {
-    super.update();
-
-    if (!world.isRemote) {
-      if (!lastPos.equals(pos)) {
-        lastPos = pos;
-        if (isMerged()) {
-          // Doing this in onLoad causes ConcurrentModificationException
-          updateMergeState(StargatePegasusMergeHelper.INSTANCE.checkBlocks(world, pos, facing), facing);
-
-          stargateSize = AunisConfig.stargateSize;
-        }
-
-        updateLinkStatus();
-        markDirty();
-      }
-    }
+  protected boolean onGateMergeRequested() {
+    return StargatePegasusMergeHelper.INSTANCE.checkBlocks(world, pos, facing);
   }
 
   public static final EnumSet<BiomeOverlayEnum> SUPPORTED_OVERLAYS = EnumSet.of(BiomeOverlayEnum.NORMAL, BiomeOverlayEnum.FROST, BiomeOverlayEnum.MOSSY, BiomeOverlayEnum.AGED, BiomeOverlayEnum.SOOTY);
@@ -421,7 +404,8 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
 
           case CHEVRON_ACTIVATE:
             getRendererStateClient().spinHelper.setIsSpinning(false);
-            getRendererStateClient().lockChevron(getRendererStateClient().spinHelper.getTargetSymbol().getId(), getRendererStateClient().chevronTextureList.getNextChevron());
+            ChevronEnum chevron = gateActionState.modifyFinal ? ChevronEnum.getFinal() : getRendererStateClient().chevronTextureList.getNextChevron();
+            getRendererStateClient().lockChevron(getRendererStateClient().spinHelper.getTargetSymbol().getId(), chevron);
 
             break;
 
@@ -445,29 +429,13 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
     super.setState(stateType, state);
   }
 
+  protected long getSpinStartOffset() {
+    return slotFromChevron(getRendererStateClient().chevronTextureList.getCurrentChevron());
+  }
+
   // TODO(sentialx): refactor
   public int slotFromChevron(ChevronEnum chevron) {
-    switch (chevron.rotationIndex) {
-      case 0:
-        return 29;
-      case 1:
-        return 5;
-      case 2:
-        return 1;
-      case 3:
-        return 33;
-      case 4:
-        return 9;
-      case 5:
-        return 25;
-      case 6:
-        return 21;
-      case 7:
-        return 17;
-      case 8:
-        return 13;
-    }
-    return 0;
+    return new int[]{9, 5, 1, 33, 29, 25, 21, 17, 13}[chevron.rotationIndex];
   }
 
   @Override
@@ -483,20 +451,28 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
     } else {
       spinDirection = spinDirection.opposite();
 
-      int indexDiff = slotFromChevron(ChevronEnum.valueOf(dialedAddress.size()));
+      ChevronEnum targetChevron = targetSymbol.origin() ? ChevronEnum.getFinal() : ChevronEnum.valueOf(dialedAddress.size());
+      ChevronEnum currentChevron = dialedAddress.size() == 0 ? ChevronEnum.C1 : ChevronEnum.valueOf(targetChevron.index - 1);
 
-      if (spinDirection != EnumSpinDirection.CLOCKWISE) indexDiff = 36 - indexDiff;
+      if (targetSymbol.origin() && dialedAddress.size() == 6) currentChevron = ChevronEnum.C6;
 
-      float distance = (float) indexDiff;
-\
-      if (distance < 25) distance += 36;
+      int indexDiff = slotFromChevron(currentChevron) - slotFromChevron(targetChevron);
+
+      EnumSpinDirection counterDirection = indexDiff < 0 ? EnumSpinDirection.COUNTER_CLOCKWISE : EnumSpinDirection.CLOCKWISE;
+
+      if (spinDirection == counterDirection) {
+        indexDiff = 36 - Math.abs(indexDiff);
+      }
+
+      float distance = (float) Math.abs(indexDiff);
+      if (distance <= 20) distance += 36;
 
       int duration = (int) (distance);
 
       Aunis.logger.debug("addSymbolToAddressManual: " + "current:" + currentRingSymbol + ", " + "target:" + targetSymbol + ", " + "direction:" + spinDirection + ", " + "distance:" + distance + ", " + "duration:" + duration + ", " + "moveOnly:" + moveOnly);
 
       AunisPacketHandler.INSTANCE.sendToAllTracking(new StateUpdatePacketToClient(pos, StateTypeEnum.SPIN_STATE, new StargateSpinState(targetRingSymbol, spinDirection, false)), targetPoint);
-      addTask(new ScheduledTask(EnumScheduledTask.STARGATE_SPIN_FINISHED, duration));
+      addTask(new ScheduledTask(EnumScheduledTask.STARGATE_SPIN_FINISHED, duration - 1));
       playPositionedSound(StargateSoundPositionedEnum.GATE_RING_ROLL, true);
 
       isSpinning = true;
