@@ -365,7 +365,7 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 		return RENDER_BOX;
 	}
 
-	private StargateSizeEnum getStargateSizeConfig(boolean server) {
+	protected StargateSizeEnum getStargateSizeConfig(boolean server) {
 		return StargateSizeEnum.SMALL;
 	}
 

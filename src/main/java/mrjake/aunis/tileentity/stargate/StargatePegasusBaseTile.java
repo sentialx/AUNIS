@@ -25,7 +25,6 @@ import mrjake.aunis.state.StargateSpinState;
 import mrjake.aunis.state.State;
 import mrjake.aunis.state.StateTypeEnum;
 import mrjake.aunis.tileentity.util.ScheduledTask;
-import mrjake.aunis.util.ILinkable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -35,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class StargatePegasusBaseTile extends StargateClassicBaseTile implements ILinkable {
+public class StargatePegasusBaseTile extends StargateClassicBaseTile {
 	// ------------------------------------------------------------------------
 	// Stargate state
 
@@ -150,7 +149,7 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
 	 * @return Stargate's size
 	 */
 	@Override
-	private StargateSizeEnum getStargateSizeConfig(boolean server) {
+	protected StargateSizeEnum getStargateSizeConfig(boolean server) {
 		return server ? AunisConfig.stargateSize : getRendererStateClient().stargateSize;
 	}
 
@@ -204,7 +203,7 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
 						break;
 
 					case CHEVRON_ACTIVATE:
-						getRendererStateClient().spinHelper.setIsSpinning(false);
+						getRendererStateClient().spinHelper.setSpinning(false);
 						ChevronEnum chevron = gateActionState.modifyFinal ? ChevronEnum.getFinal() : getRendererStateClient().chevronTextureList.getNextChevron();
 						getRendererStateClient().lockChevron(getRendererStateClient().spinHelper.getTargetSymbol().getId(), chevron);
 
