@@ -10,126 +10,127 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StargatePegasusRendererState extends StargateClassicRendererState {
-  public static final int GLYPHS_COUNT = 36;
+	public static final int GLYPHS_COUNT = 36;
 
-  public static int slotFromChevron(ChevronEnum chevron) {
-    return new int[]{9, 5, 1, 33, 29, 25, 21, 17, 13}[chevron.rotationIndex];
-  }
+	public static int slotFromChevron(ChevronEnum chevron) {
+		return new int[]{9, 5, 1, 33, 29, 25, 21, 17, 13}[chevron.rotationIndex];
+	}
 
-  public StargatePegasusRendererState() { }
+	public StargatePegasusRendererState() {
+	}
 
-  private StargatePegasusRendererState(StargatePegasusRendererStateBuilder builder) {
-    super(builder);
+	private StargatePegasusRendererState(StargatePegasusRendererStateBuilder builder) {
+		super(builder);
 
-    this.stargateSize = builder.stargateSize;
-    this.spinHelper = new StargatePegasusSpinHelper(builder.symbolType, builder.currentRingSymbol, builder.spinDirection, builder.isSpinning, builder.targetRingSymbol, builder.spinStartTime);
-  }
+		this.stargateSize = builder.stargateSize;
+		this.spinHelper = new StargatePegasusSpinHelper(builder.symbolType, builder.currentRingSymbol, builder.spinDirection, builder.isSpinning, builder.targetRingSymbol, builder.spinStartTime);
+	}
 
-  public Map<Integer, Integer> slotToGlyphMap = new HashMap<Integer, Integer>();
+	public Map<Integer, Integer> slotToGlyphMap = new HashMap<Integer, Integer>();
 
-  public void setGlyphAtSlot(int glyphId, int slot) {
-    if (slot > GLYPHS_COUNT) return;
+	public void setGlyphAtSlot(int glyphId, int slot) {
+		if (slot > GLYPHS_COUNT) return;
 
-    slotToGlyphMap.put(slot, glyphId);
-  }
+		slotToGlyphMap.put(slot, glyphId);
+	}
 
-  public void lockChevron(int glyphId, ChevronEnum chevron) {
-    setGlyphAtSlot(glyphId, slotFromChevron(chevron));
-  }
+	public void lockChevron(int glyphId, ChevronEnum chevron) {
+		setGlyphAtSlot(glyphId, slotFromChevron(chevron));
+	}
 
-  @Override
-  public void clearChevrons(long time) {
-    super.clearChevrons(time);
-    this.clearGlyphs();
-  }
+	@Override
+	public void clearChevrons(long time) {
+		super.clearChevrons(time);
+		this.clearGlyphs();
+	}
 
-  public void clearGlyphs() {
-    slotToGlyphMap.clear();
-  }
+	public void clearGlyphs() {
+		slotToGlyphMap.clear();
+	}
 
-  // Gate
-  // Saved
-  public StargateSizeEnum stargateSize = AunisConfig.stargateSize;
+	// Gate
+	// Saved
+	public StargateSizeEnum stargateSize = AunisConfig.stargateSize;
 
-  // Chevrons
-  // Not saved
-  public boolean chevronOpen;
-  public long chevronActionStart;
-  public boolean chevronOpening;
-  public boolean chevronClosing;
+	// Chevrons
+	// Not saved
+	public boolean chevronOpen;
+	public long chevronActionStart;
+	public boolean chevronOpening;
+	public boolean chevronClosing;
 
-  public void openChevron(long totalWorldTime) {
-    chevronActionStart = totalWorldTime;
-    chevronOpening = true;
-  }
+	public void openChevron(long totalWorldTime) {
+		chevronActionStart = totalWorldTime;
+		chevronOpening = true;
+	}
 
-  public void closeChevron(long totalWorldTime) {
-    chevronActionStart = totalWorldTime;
-    chevronClosing = true;
-  }
+	public void closeChevron(long totalWorldTime) {
+		chevronActionStart = totalWorldTime;
+		chevronClosing = true;
+	}
 
-  @Override
-  protected String getChevronTextureBase() {
-    return "pegasus/chevron";
-  }
+	@Override
+	protected String getChevronTextureBase() {
+		return "pegasus/chevron";
+	}
 
-  @Override
-  public void toBytes(ByteBuf buf) {
-    buf.writeInt(stargateSize.id);
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(stargateSize.id);
 
-    super.toBytes(buf);
-  }
+		super.toBytes(buf);
+	}
 
-  @Override
-  public void fromBytes(ByteBuf buf) {
-    stargateSize = StargateSizeEnum.fromId(buf.readInt());
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		stargateSize = StargateSizeEnum.fromId(buf.readInt());
 
-    chevronTextureList = new ChevronTextureList(getChevronTextureBase());
-    chevronTextureList.fromBytes(buf);
+		chevronTextureList = new ChevronTextureList(getChevronTextureBase());
+		chevronTextureList.fromBytes(buf);
 
-    spinHelper = new StargatePegasusSpinHelper();
-    spinHelper.fromBytes(buf);
+		spinHelper = new StargatePegasusSpinHelper();
+		spinHelper.fromBytes(buf);
 
-    if (buf.readBoolean()) {
-      biomeOverride = BiomeOverlayEnum.values()[buf.readInt()];
-    }
-  }
+		if (buf.readBoolean()) {
+			biomeOverride = BiomeOverlayEnum.values()[buf.readInt()];
+		}
+	}
 
 
-  // ------------------------------------------------------------------------
-  // Builder
+	// ------------------------------------------------------------------------
+	// Builder
 
-  public static StargatePegasusRendererStateBuilder builder() {
-    return new StargatePegasusRendererStateBuilder();
-  }
+	public static StargatePegasusRendererStateBuilder builder() {
+		return new StargatePegasusRendererStateBuilder();
+	}
 
-  public static class StargatePegasusRendererStateBuilder extends mrjake.aunis.renderer.stargate.StargateClassicRendererState.StargateClassicRendererStateBuilder {
-    public StargatePegasusRendererStateBuilder() {
-    }
+	public static class StargatePegasusRendererStateBuilder extends mrjake.aunis.renderer.stargate.StargateClassicRendererState.StargateClassicRendererStateBuilder {
+		public StargatePegasusRendererStateBuilder() {
+		}
 
-    private StargateSizeEnum stargateSize;
+		private StargateSizeEnum stargateSize;
 
-    public StargatePegasusRendererStateBuilder(StargateClassicRendererStateBuilder superBuilder) {
-      super(superBuilder);
-      setSymbolType(superBuilder.symbolType);
-      setActiveChevrons(superBuilder.activeChevrons);
-      setFinalActive(superBuilder.isFinalActive);
-      setCurrentRingSymbol(superBuilder.currentRingSymbol);
-      setSpinDirection(superBuilder.spinDirection);
-      setSpinning(superBuilder.isSpinning);
-      setTargetRingSymbol(superBuilder.targetRingSymbol);
-      setSpinStartTime(superBuilder.spinStartTime);
-      setBiomeOverride(superBuilder.biomeOverride);
-    }
+		public StargatePegasusRendererStateBuilder(StargateClassicRendererStateBuilder superBuilder) {
+			super(superBuilder);
+			setSymbolType(superBuilder.symbolType);
+			setActiveChevrons(superBuilder.activeChevrons);
+			setFinalActive(superBuilder.isFinalActive);
+			setCurrentRingSymbol(superBuilder.currentRingSymbol);
+			setSpinDirection(superBuilder.spinDirection);
+			setSpinning(superBuilder.isSpinning);
+			setTargetRingSymbol(superBuilder.targetRingSymbol);
+			setSpinStartTime(superBuilder.spinStartTime);
+			setBiomeOverride(superBuilder.biomeOverride);
+		}
 
-    public StargatePegasusRendererStateBuilder setStargateSize(StargateSizeEnum stargateSize) {
-      this.stargateSize = stargateSize;
-      return this;
-    }
+		public StargatePegasusRendererStateBuilder setStargateSize(StargateSizeEnum stargateSize) {
+			this.stargateSize = stargateSize;
+			return this;
+		}
 
-    @Override
-    public StargatePegasusRendererState build() {
-      return new StargatePegasusRendererState(this);
-    }
-  }
+		@Override
+		public StargatePegasusRendererState build() {
+			return new StargatePegasusRendererState(this);
+		}
+	}
 }

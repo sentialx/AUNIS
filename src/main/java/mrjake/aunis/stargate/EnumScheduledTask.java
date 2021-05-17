@@ -13,7 +13,7 @@ public enum EnumScheduledTask {
 	STARGATE_CHEVRON_OPEN_SECOND(5, 38, false),
 	STARGATE_CHEVRON_CLOSE(6, 15, false),
 	HORIZON_FLASH(7, -1, false), 
-	STARGATE_ORLIN_OPEN(8, 144), // 8.93s(duration of dial sound) * 20(tps) − 25(STARGATE_OPEN_SOUND wait time)
+	STARGATE_ORLIN_OPEN(8, 144), // 8.93s(duration of dial sound) * 20(tps) - 25(STARGATE_OPEN_SOUND wait time)
 	STARGATE_ORLIN_SPARK(9, 27, false),
 	STARGATE_HORIZON_LIGHT_BLOCK(10, -1),
 	STARGATE_HORIZON_WIDEN(11, -1, false),

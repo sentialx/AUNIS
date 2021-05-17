@@ -9,7 +9,7 @@ import mrjake.aunis.Aunis;
 import mrjake.aunis.loader.model.ModelLoader;
 import net.minecraft.util.ResourceLocation;
 
-public enum SymbolMilkyWayEnum implements SymbolInterface, DHDSymbolInterface {
+public enum SymbolMilkyWayEnum implements DHDSymbolInterface {
 	SCULPTOR(0, 19, "Sculptor", "0.obj"),
 	SCORPIUS(1, 8, "Scorpius", "1.obj"),
 	CENTAURUS(2, 4, "Centaurus", "2.obj"),
@@ -49,104 +49,104 @@ public enum SymbolMilkyWayEnum implements SymbolInterface, DHDSymbolInterface {
 	ORION(36, 29, "Orion", "36.obj"),
 	PISCISAUSTRINUS(37, 15, "Piscis Austrinus", "37.obj"),
 	BRB(38, -1, "Bright Red Button", "BRB.obj");
-	
+
 	public static final float ANGLE_PER_GLYPH = 9.2307692f;
-	
+
 	public int id;
 	public int angleIndex;
 	public float angle;
-	
+
 	public String englishName;
 	public String translationKey;
 	public ResourceLocation iconResource;
 	public ResourceLocation modelResource;
-	
+
 	SymbolMilkyWayEnum(int id, int angleIndex, String englishName, String model) {
 		this.id = id;
-		
+
 		this.angleIndex = angleIndex;
 		this.angle = 360 - (angleIndex * ANGLE_PER_GLYPH);
-		
+
 		this.englishName = englishName;
 		this.translationKey = "glyph.aunis.milkyway." + englishName.toLowerCase().replace(" ", "_");
 		this.iconResource = new ResourceLocation(Aunis.ModID, "textures/gui/symbol/milkyway/" + englishName.toLowerCase() + ".png");
-		
+
 		this.modelResource = ModelLoader.getModelResource("milkyway/" + model);
 	}
-	
-	public boolean brb() {
+
+	public boolean isConfirmButton() {
 		return this == BRB;
 	}
-	
+
 	@Override
 	public boolean origin() {
 		return this == ORIGIN;
 	}
-	
+
 	@Override
 	public int getId() {
 		return id;
 	}
-	
+
 	@Override
 	public float getAngle() {
 		return angle;
 	}
-	
+
 	@Override
 	public int getAngleIndex() {
 		return angleIndex;
 	}
-	
+
 	@Override
 	public String getEnglishName() {
 		return englishName;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getEnglishName();
 	}
-	
+
 	@Override
 	public ResourceLocation getIconResource() {
 		return iconResource;
 	}
-	
+
 	@Override
 	public String localize() {
 		return Aunis.proxy.localize(translationKey);
 	}
-	
+
 	@Override
 	public SymbolTypeEnum getSymbolType() {
 		return SymbolTypeEnum.MILKYWAY;
 	}
-	
+
 	// ------------------------------------------------------------
 	// Static
-	
+
 	public static SymbolMilkyWayEnum getRandomSymbol(Random random) {
 		int id = 0;
-		do { 
+		do {
 			id = random.nextInt(38);
 		} while (id == ORIGIN.id);
-		
+
 		return valueOf(id);
 	}
-	
+
 	public static boolean validateDialedAddress(StargateAddressDynamic stargateAddress) {
 		if (stargateAddress.size() < 7)
 			return false;
-		
-		if (!stargateAddress.get(stargateAddress.size()-1).origin())
+
+		if (!stargateAddress.get(stargateAddress.size() - 1).origin())
 			return false;
-		
+
 		return true;
 	}
-	
+
 	public static List<SymbolInterface> stripOrigin(List<SymbolInterface> dialedAddress) {
-		return dialedAddress.subList(0, dialedAddress.size()-1);
+		return dialedAddress.subList(0, dialedAddress.size() - 1);
 	}
 
 	public static int getMinimalSymbolCountTo(SymbolTypeEnum symbolType, boolean localDial) {
@@ -154,18 +154,18 @@ public enum SymbolMilkyWayEnum implements SymbolInterface, DHDSymbolInterface {
 			case MILKYWAY:
 			case PEGASUS:
 				return localDial ? 7 : 8;
-				
+
 			case UNIVERSE:
 				return 9;
 		}
-		
+
 		return 0;
 	}
 
 	public static SymbolInterface getOrigin() {
 		return ORIGIN;
 	}
-	
+
 	public static int getMaxSymbolsDisplay(boolean hasUpgrade) {
 		return hasUpgrade ? 8 : 6;
 	}
@@ -173,25 +173,25 @@ public enum SymbolMilkyWayEnum implements SymbolInterface, DHDSymbolInterface {
 	public static float getAnglePerGlyph() {
 		return ANGLE_PER_GLYPH;
 	}
-	
+
 	public static SymbolInterface getTopSymbol() {
 		return ORIGIN;
 	}
-	
+
 	private static final Map<Integer, SymbolMilkyWayEnum> ID_MAP = new HashMap<>();
 	private static final Map<String, SymbolMilkyWayEnum> ENGLISH_NAME_MAP = new HashMap<>();
-	
+
 	static {
 		for (SymbolMilkyWayEnum symbol : values()) {
 			ID_MAP.put(symbol.id, symbol);
 			ENGLISH_NAME_MAP.put(symbol.englishName.toLowerCase(), symbol);
 		}
 	}
-	
+
 	public static final SymbolMilkyWayEnum valueOf(int id) {
 		return ID_MAP.get(id);
 	}
-	
+
 	public static final SymbolMilkyWayEnum fromEnglishName(String englishName) {
 		return ENGLISH_NAME_MAP.get(englishName.toLowerCase().replace("ö", "o"));
 	}

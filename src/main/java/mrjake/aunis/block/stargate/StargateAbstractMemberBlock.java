@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import mrjake.aunis.Aunis;
 import mrjake.aunis.AunisProps;
+import mrjake.aunis.stargate.EnumMemberVariant;
 import mrjake.aunis.stargate.merging.StargateAbstractMergeHelper;
 import mrjake.aunis.tileentity.stargate.StargateAbstractBaseTile;
 import mrjake.aunis.tileentity.stargate.StargateAbstractMemberTile;
@@ -23,97 +24,99 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public abstract class StargateAbstractMemberBlock extends Block {
+	public final int RING_META = getMetaFromState(getDefaultState().withProperty(AunisProps.MEMBER_VARIANT, EnumMemberVariant.RING));
+	public final int CHEVRON_META = getMetaFromState(getDefaultState().withProperty(AunisProps.MEMBER_VARIANT, EnumMemberVariant.CHEVRON));
 
-    public StargateAbstractMemberBlock(String blockName) {
-        super(Material.IRON);
+	public StargateAbstractMemberBlock(String blockName) {
+		super(Material.IRON);
 
-        setRegistryName(Aunis.ModID + ":" + blockName);
-        setUnlocalizedName(Aunis.ModID + "." + blockName);
+		setRegistryName(Aunis.ModID + ":" + blockName);
+		setUnlocalizedName(Aunis.ModID + "." + blockName);
 
-        setSoundType(SoundType.METAL);
-        setCreativeTab(Aunis.aunisCreativeTab);
+		setSoundType(SoundType.METAL);
+		setCreativeTab(Aunis.aunisCreativeTab);
 
-        setHardness(3.0f);
-        setHarvestLevel("pickaxe", 3);
-    }
+		setHardness(3.0f);
+		setHarvestLevel("pickaxe", 3);
+	}
 
-    protected abstract StargateAbstractMergeHelper getMergeHelper();
-
-
-    // --------------------------------------------------------------------------------------
-    // Interactions
-
-    @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        StargateAbstractMemberTile memberTile = (StargateAbstractMemberTile) world.getTileEntity(pos);
-        StargateAbstractBaseTile gateTile = memberTile.getBaseTile(world);
-        
-        if (gateTile != null) {
-            gateTile.updateMergeState(false, world.getBlockState(gateTile.getPos()).getValue(AunisProps.FACING_HORIZONTAL));
-        }
-    }
-    
-    @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-        if (willHarvest) return true; //If it will harvest, delay deletion of the block until after getDrops
-        return super.removedByPlayer(state, world, pos, player, willHarvest);
-    }
-
-    @Override
-    public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack tool) {
-        super.harvestBlock(world, player, pos, state, te, tool);
-        world.setBlockToAir(pos);
-    }
-
-    // --------------------------------------------------------------------------------------
-    // TileEntity
+	protected abstract StargateAbstractMergeHelper getMergeHelper();
 
 
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
+	// --------------------------------------------------------------------------------------
+	// Interactions
 
-    @Override
-    public abstract TileEntity createTileEntity(World world, IBlockState state);
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		StargateAbstractMemberTile memberTile = (StargateAbstractMemberTile) world.getTileEntity(pos);
+		StargateAbstractBaseTile gateTile = memberTile.getBaseTile(world);
+
+		if (gateTile != null) {
+			gateTile.updateMergeState(false, world.getBlockState(gateTile.getPos()).getValue(AunisProps.FACING_HORIZONTAL));
+		}
+	}
+
+	@Override
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+		if (willHarvest) return true; //If it will harvest, delay deletion of the block until after getDrops
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
+	}
+
+	@Override
+	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack tool) {
+		super.harvestBlock(world, player, pos, state, te, tool);
+		world.setBlockToAir(pos);
+	}
+
+	// --------------------------------------------------------------------------------------
+	// TileEntity
 
 
-    // --------------------------------------------------------------------------------------
-    // Rendering
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
 
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        if (state.getValue(AunisProps.RENDER_BLOCK))
-            return EnumBlockRenderType.MODEL;
-        else
-            return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-    }
+	@Override
+	public abstract TileEntity createTileEntity(World world, IBlockState state);
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
 
-    @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
+	// --------------------------------------------------------------------------------------
+	// Rendering
 
-    @Override
-    public boolean isFullBlock(IBlockState state) {
-        return false;
-    }
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		if (state.getValue(AunisProps.RENDER_BLOCK))
+			return EnumBlockRenderType.MODEL;
+		else
+			return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
 
-    @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing facing) {
-    	if (state.getValue(AunisProps.RENDER_BLOCK)) {
-    		// Rendering some block
-    		StargateClassicMemberTile memberTile = (StargateClassicMemberTile) world.getTileEntity(pos);
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean isFullBlock(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing facing) {
+		if (state.getValue(AunisProps.RENDER_BLOCK)) {
+			// Rendering some block
+			StargateClassicMemberTile memberTile = (StargateClassicMemberTile) world.getTileEntity(pos);
 			if (memberTile != null && memberTile.getCamoState() != null) {
 				return memberTile.getCamoState().getBlockFaceShape(world, pos, facing);
 			}
-    	}
-        
-    	return BlockFaceShape.UNDEFINED;
-    }
+		}
+
+		return BlockFaceShape.UNDEFINED;
+	}
 }

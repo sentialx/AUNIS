@@ -11,23 +11,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public final class StargatePegasusMemberBlock extends StargateClassicMemberBlock {
-  public static final String BLOCK_NAME = "stargate_pegasus_member_block";
+	public static final String BLOCK_NAME = "stargate_pegasus_member_block";
 
-  public final int RING_META = getMetaFromState(getDefaultState().withProperty(AunisProps.MEMBER_VARIANT, EnumMemberVariant.RING));
-  public final int CHEVRON_META = getMetaFromState(getDefaultState().withProperty(AunisProps.MEMBER_VARIANT, EnumMemberVariant.CHEVRON));
+	public StargatePegasusMemberBlock() {
+		super(BLOCK_NAME);
+		setResistance(2000.0f);
+	}
 
-  public StargatePegasusMemberBlock() {
-    super(BLOCK_NAME);
-    setResistance(2000.0f);
-  }
+	@Override
+	protected StargateAbstractMergeHelper getMergeHelper() {
+		return StargatePegasusMergeHelper.INSTANCE;
+	}
 
-  @Override
-  protected StargateAbstractMergeHelper getMergeHelper() {
-    return StargatePegasusMergeHelper.INSTANCE;
-  }
-
-  @Override
-  public TileEntity createTileEntity(World world, IBlockState state) {
-    return new StargatePegasusMemberTile();
-  }
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return new StargatePegasusMemberTile();
+	}
 }

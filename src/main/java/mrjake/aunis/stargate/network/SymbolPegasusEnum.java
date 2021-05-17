@@ -8,7 +8,7 @@ import java.util.Random;
 import mrjake.aunis.Aunis;
 import net.minecraft.util.ResourceLocation;
 
-public enum SymbolPegasusEnum implements SymbolInterface {
+public enum SymbolPegasusEnum implements DHDSymbolInterface {
 	ACJESIS(0, "Acjesis"),
 	LENCHAN(1, "Lenchan"),
 	ALURA(2, "Alura"),
@@ -44,8 +44,9 @@ public enum SymbolPegasusEnum implements SymbolInterface {
 	ABRIN(32, "Abrin"),
 	RAMNON(33, "Ramnon"),
 	OLAVII(34, "Olavii"),
-	HACEMILL(35, "Hacemill");
-	
+	HACEMILL(35, "Hacemill"),
+	BBB(36, "Bright Blue Button");
+
 	public int id;
 	public String englishName;
 	public String translationKey;
@@ -53,10 +54,15 @@ public enum SymbolPegasusEnum implements SymbolInterface {
 
 	private SymbolPegasusEnum(int id, String englishName) {
 		this.id = id;
-		
+
 		this.englishName = englishName;
 		this.translationKey = "glyph.aunis.pegasus." + englishName.toLowerCase().replace(" ", "_");
 		this.iconResource = new ResourceLocation(Aunis.ModID, "textures/gui/symbol/pegasus/" + englishName.toLowerCase() + ".png");
+	}
+
+	@Override
+	public boolean isConfirmButton() {
+		return this == BBB;
 	}
 
 	@Override
@@ -68,7 +74,7 @@ public enum SymbolPegasusEnum implements SymbolInterface {
 	public float getAngle() {
 		return id;
 	}
-	
+
 	@Override
 	public int getAngleIndex() {
 		return id;
@@ -83,12 +89,12 @@ public enum SymbolPegasusEnum implements SymbolInterface {
 	public String getEnglishName() {
 		return englishName;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getEnglishName();
 	}
-	
+
 	@Override
 	public ResourceLocation getIconResource() {
 		return iconResource;
@@ -98,55 +104,55 @@ public enum SymbolPegasusEnum implements SymbolInterface {
 	public String localize() {
 		return Aunis.proxy.localize(translationKey);
 	}
-	
+
 	@Override
 	public SymbolTypeEnum getSymbolType() {
 		return SymbolTypeEnum.PEGASUS;
 	}
-	
+
 	// ------------------------------------------------------------
 	// Static
-	
+
 	public static SymbolPegasusEnum getRandomSymbol(Random random) {
 		int id = 0;
-		do { 
+		do {
 			id = random.nextInt(36);
 		} while (id == SUBIDO.id);
-		
+
 		return valueOf(id);
 	}
-	
+
 	public static boolean validateDialedAddress(StargateAddressDynamic stargateAddress) {
 		if (stargateAddress.size() < 7)
 			return false;
-		
-		if (!stargateAddress.get(stargateAddress.size()-1).origin())
+
+		if (!stargateAddress.get(stargateAddress.size() - 1).origin())
 			return false;
-		
+
 		return true;
 	}
-	
+
 	public static List<SymbolInterface> stripOrigin(List<SymbolInterface> dialedAddress) {
-		return dialedAddress.subList(0, dialedAddress.size()-1);
+		return dialedAddress.subList(0, dialedAddress.size() - 1);
 	}
-	
+
 	public static int getMinimalSymbolCountTo(SymbolTypeEnum symbolType, boolean localDial) {
 		switch (symbolType) {
 			case MILKYWAY:
 			case PEGASUS:
 				return localDial ? 7 : 8;
-				
+
 			case UNIVERSE:
 				return 9;
 		}
-		
+
 		return 0;
 	}
-	
+
 	public static SymbolInterface getOrigin() {
 		return SUBIDO;
 	}
-	
+
 	public static int getMaxSymbolsDisplay(boolean hasUpgrade) {
 		return hasUpgrade ? 8 : 6;
 	}
@@ -154,25 +160,25 @@ public enum SymbolPegasusEnum implements SymbolInterface {
 	public static float getAnglePerGlyph() {
 		return 0;
 	}
-	
+
 	public static SymbolInterface getTopSymbol() {
 		return SUBIDO;
 	}
-	
+
 	private static final Map<Integer, SymbolPegasusEnum> ID_MAP = new HashMap<>();
 	private static final Map<String, SymbolPegasusEnum> ENGLISH_NAME_MAP = new HashMap<>();
-	
+
 	static {
 		for (SymbolPegasusEnum symbol : values()) {
 			ID_MAP.put(symbol.id, symbol);
 			ENGLISH_NAME_MAP.put(symbol.englishName.toLowerCase(), symbol);
 		}
 	}
-	
+
 	public static final SymbolPegasusEnum valueOf(int id) {
 		return ID_MAP.get(id);
 	}
-	
+
 	public static final SymbolPegasusEnum fromEnglishName(String englishName) {
 		return ENGLISH_NAME_MAP.get(englishName.toLowerCase());
 	}
