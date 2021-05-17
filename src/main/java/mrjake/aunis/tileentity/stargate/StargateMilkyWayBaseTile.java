@@ -2,6 +2,8 @@ package mrjake.aunis.tileentity.stargate;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.annotation.Nullable;
 
@@ -143,11 +145,56 @@ public class StargateMilkyWayBaseTile extends StargateClassicBaseTile implements
     super.addSymbolToAddressManual(targetSymbol, context);
   }
 
-  public void incomingWormhole(int dialedAddressSize) {
+  public void incomingWormhole(int dialedAddressSize){
     super.incomingWormhole(dialedAddressSize);
 
     if (isLinkedAndDHDOperational()) {
       getLinkedDHD(world).clearSymbols();
+    }
+
+    prepareGateToConnect(dialedAddressSize);
+  }
+
+  // incoming animation
+
+
+  public void prepareGateToConnect(int dialedAddressSize){
+    if(stargateState.dialingComputer()) {
+      addTask(new ScheduledTask(EnumScheduledTask.STARGATE_SPIN_FINISHED, 0));
+    }
+
+    boolean allowIncomingAnimation = AunisConfig.stargateConfig.allowIncomingAnimations;
+
+    if(allowIncomingAnimation) {
+      final int[] i = {1};
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        public void run() {
+          if (i[0] <= dialedAddressSize) {
+            sendRenderingUpdate(EnumGateAction.LIGHT_UP_CHEVRONS, i[0], false);
+            playSoundEvent(StargateSoundEventEnum.INCOMING);
+            i[0]++;
+          } else {
+            sendRenderingUpdate(EnumGateAction.LIGHT_UP_CHEVRONS, dialedAddressSize, true);
+            timer.cancel();
+          }
+        }
+      }, 0, 400);
+    }
+    else{
+      final int[] i = {1};
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        public void run() {
+          if (i[0] <= 2) {
+            sendRenderingUpdate(EnumGateAction.LIGHT_UP_CHEVRONS, dialedAddressSize, false);
+            i[0]++;
+          } else {
+            timer.cancel();
+          }
+        }
+      }, 0, 100);
+      playSoundEvent(StargateSoundEventEnum.INCOMING);
     }
   }
 
@@ -459,7 +506,7 @@ public class StargateMilkyWayBaseTile extends StargateClassicBaseTile implements
         break;
 
       case STARGATE_SPIN_FINISHED:
-        addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_OPEN, 11));
+        addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_OPEN, 7));
 
         break;
 
@@ -472,16 +519,16 @@ public class StargateMilkyWayBaseTile extends StargateClassicBaseTile implements
 
           if (stargateWillLock(targetRingSymbol)) {
             if (checkAddressAndEnergy(dialedAddress).ok()) {
-              addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_OPEN_SECOND, 8));
-            } else addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_FAIL, 60));
-          } else addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_OPEN_SECOND, 8));
-        } else addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_FAIL, 60));
+              addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_OPEN_SECOND, 7));
+            } else addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_FAIL, 70));
+          } else addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_OPEN_SECOND, 7));
+        } else addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_FAIL, 70));
 
         break;
 
       case STARGATE_CHEVRON_OPEN_SECOND:
         playSoundEvent(StargateSoundEventEnum.CHEVRON_OPEN);
-        addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_LIGHT_UP, 4));
+        addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_LIGHT_UP, 3));
 
         break;
 
@@ -491,7 +538,7 @@ public class StargateMilkyWayBaseTile extends StargateClassicBaseTile implements
 
         updateChevronLight(dialedAddress.size(), isFinalActive);
 
-        addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_CLOSE, 14));
+        addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_CLOSE, 10));
 
         break;
 
@@ -502,7 +549,7 @@ public class StargateMilkyWayBaseTile extends StargateClassicBaseTile implements
         if (stargateWillLock(targetRingSymbol)) {
           stargateState = EnumStargateState.IDLE;
           sendSignal(ringSpinContext, "stargate_spin_chevron_engaged", new Object[]{dialedAddress.size(), true, targetRingSymbol.getEnglishName()});
-        } else addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_DIM, 6));
+        } else addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_DIM, 10));
 
         break;
 

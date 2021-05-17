@@ -46,13 +46,16 @@ public class AutoCloseManager implements INBTSerializable<NBTTagCompound> {
 			
 			if (playersPassed > 0) {
 				if (sourceLoaded) {
-					
+					// create scan box
 					AxisAlignedBB scanBox = new AxisAlignedBB(sourcePos.add(new Vec3i(-10, -5, -10)), sourcePos.add(new Vec3i(10, 5, 10)));
+					// scan players in box
 					int playerCount = sourceWorld.getEntitiesWithinAABB(EntityPlayerMP.class, scanBox, player -> !player.isDead).size();
-
+  					// check if player is in the box
 					if (playerCount == 0)
+						// if no, add 1 to secondsPassed
 						secondsPassed++;
 					else
+						// if yes, reset secondsPassed
 						secondsPassed = 0;
 				}
 				

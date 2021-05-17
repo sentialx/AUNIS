@@ -66,6 +66,12 @@ public class AunisConfig {
 
 		@Name("Universe dialer nearby radius")
 		public int universeGateNearbyReach = 1024;
+
+		@Name("Use 8 chevrons between MW and PG gates")
+		@Comment({
+				"Change this to true, if you want to use 8 chevrons between pegasus and milkyway gates"
+		})
+		public boolean pegAndMilkUseEightChevrons = false;
 		
 		@Name("Disable animated Event Horizon")
 		@Comment({
@@ -80,6 +86,22 @@ public class AunisConfig {
 			"Set to negative value to disable."
 		})
 		public float frostyTemperatureThreshold = 0.1f;
+
+		@Name("Allow incoming animations")
+		@Comment({
+				"If the incoming animations of gates generate issues, set it to false",
+		})
+		public boolean allowIncomingAnimations = true;
+
+		@Name("Connect to dialing gate")
+		@Comment({
+				"If target gate is dialing and this option is set to true,",
+				"the target gate stop dialing and open incoming wormhole.",
+				"If this is set to false and the dialed gate dialing address,",
+				"the connection will not established.",
+				"If it cause issues, set it to false.",
+		})
+		public boolean allowConnectToDialing = true;
 		
 		// ---------------------------------------------------------------------------------------
 		// Kawoosh blocks

@@ -30,7 +30,7 @@ public enum SoundEventEnum implements EnumKeyInterface<Integer> {
 
   // ----------------------------------------------------------
   // Stargate - Pegasus
-  GATE_PEGASUS_CHEVRON_OPEN(80, "gate_pegasus_chevron_open", 0.25f), GATE_PEGASUS_CHEVRON_SHUT(81, "gate_pegasus_chevron_shut", 0.25f), GATE_PEGASUS_OPEN(82, "gate_pegasus_open", 0.5f),
+  GATE_PEGASUS_CHEVRON_OPEN(80, "gate_pegasus_chevron_open", 0.25f), GATE_PEGASUS_CHEVRON_SHUT(81, "gate_pegasus_chevron_shut", 0.25f), GATE_PEGASUS_OPEN(82, "gate_pegasus_open", 0.5f), GATE_PEGASUS_INCOMING(83, "gate_pegasus_incoming", 0.5f), GATE_PEGASUS_DIAL_FAILED(84, "gate_pegasus_dial_fail", 0.3f),
 
   // ----------------------------------------------------------
   // Ring transporter
@@ -47,8 +47,7 @@ public enum SoundEventEnum implements EnumKeyInterface<Integer> {
 
 
   // ----------------------------------------------------------
-
-  public int id;
+    public int id;
   public SoundEvent soundEvent;
   public float volume;
 

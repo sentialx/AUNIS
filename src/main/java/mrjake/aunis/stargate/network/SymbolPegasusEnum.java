@@ -6,10 +6,48 @@ import java.util.Map;
 import java.util.Random;
 
 import mrjake.aunis.Aunis;
+import mrjake.aunis.config.AunisConfig;
 import net.minecraft.util.ResourceLocation;
 
 public enum SymbolPegasusEnum implements SymbolInterface {
-  ACJESIS(0, "Acjesis"), LENCHAN(1, "Lenchan"), ALURA(2, "Alura"), CAPO(3, "Ca Po"), LAYLOX(4, "Laylox"), ECRUMIG(5, "Ecrumig"), AVONIV(6, "Avoniv"), BYDO(7, "Bydo"), AAXEL(8, "Aaxel"), ALDENI(9, "Aldeni"), SETAS(10, "Setas"), ARAMI(11, "Arami"), DANAMI(12, "Danami"), POCORE(13, "Poco Re"), ROBANDUS(14, "Robandus"), RECKTIC(15, "Recktic"), ZAMILLOZ(16, "Zamilloz"), SUBIDO(17, "Subido"), DAWNRE(18, "Dawnre"), SALMA(19, "Salma"), HAMLINTO(20, "Hamlinto"), ELENAMI(21, "Elenami"), TAHNAN(22, "Tahnan"), ZEO(23, "Zeo"), ROEHI(24, "Roehi"), ONCEEL(25, "Once El"), BASELAI(26, "Baselai"), SANDOVI(27, "Sandovi"), ILLUME(28, "Illume"), AMIWILL(29, "Amiwill"), SIBBRON(30, "Sibbron"), GILLTIN(31, "Gilltin"), ABRIN(32, "Abrin"), RAMNON(33, "Ramnon"), OLAVII(34, "Olavii"), HACEMILL(35, "Hacemill");
+  ACJESIS(0, "Acjesis"),
+  LENCHAN(1, "Lenchan"),
+  ALURA(2, "Alura"),
+  CAPO(3, "Ca Po"),
+  LAYLOX(4, "Laylox"),
+  ECRUMIG(5, "Ecrumig"),
+  AVONIV(6, "Avoniv"),
+  BYDO(7, "Bydo"),
+  AAXEL(8, "Aaxel"),
+  ALDENI(9, "Aldeni"),
+  SETAS(10, "Setas"),
+  ARAMI(11, "Arami"),
+  DANAMI(12, "Danami"),
+  POCORE(13, "Poco Re"),
+  ROBANDUS(14, "Robandus"),
+  RECKTIC(15, "Recktic"),
+  ZAMILLOZ(16, "Zamilloz"),
+  SUBIDO(17, "Subido"), // origin
+  DAWNRE(18, "Dawnre"),
+  SALMA(19, "Salma"),
+  HAMLINTO(20, "Hamlinto"),
+  ELENAMI(21, "Elenami"),
+  TAHNAN(22, "Tahnan"),
+  ZEO(23, "Zeo"),
+  ROEHI(24, "Roehi"),
+  ONCEEL(25, "Once El"),
+  BASELAI(26, "Baselai"),
+  SANDOVI(27, "Sandovi"),
+  ILLUME(28, "Illume"),
+  AMIWILL(29, "Amiwill"),
+  SIBBRON(30, "Sibbron"),
+  GILLTIN(31, "Gilltin"),
+  ABRIN(32, "Abrin"),
+  RAMNON(33, "Ramnon"),
+  OLAVII(34, "Olavii"),
+  HACEMILL(35, "Hacemill"),
+
+  BRB(36, "Bright Red Button");
 
   public int id;
   public String englishName;
@@ -94,11 +132,17 @@ public enum SymbolPegasusEnum implements SymbolInterface {
   }
 
   public static int getMinimalSymbolCountTo(SymbolTypeEnum symbolType, boolean localDial) {
+
+    boolean eightChevrons = AunisConfig.stargateConfig.pegAndMilkUseEightChevrons;
+
     switch (symbolType) {
       case MILKYWAY:
+        if(eightChevrons)
+          return 8;
+        else
+          return localDial ? 7 : 8;
       case PEGASUS:
         return localDial ? 7 : 8;
-
       case UNIVERSE:
         return 9;
     }

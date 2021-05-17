@@ -1,10 +1,6 @@
 package mrjake.aunis.tileentity.stargate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import javax.annotation.Nullable;
@@ -49,6 +45,8 @@ import mrjake.aunis.util.EnumKeyMap;
 import mrjake.aunis.util.FacingToRotation;
 import mrjake.aunis.util.ItemHandlerHelper;
 import mrjake.aunis.util.ItemMetaPair;
+import mrjake.aunis.util.math.MathRange;
+import mrjake.aunis.util.math.MathRangedFunction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -63,6 +61,8 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.items.CapabilityItemHandler;
+
+import static mrjake.aunis.stargate.network.SymbolUniverseEnum.TOP_CHEVRON;
 
 /**
  * This class wraps common behavior for the fully-functional Stargates i.e.
@@ -128,9 +128,6 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 
     isFinalActive = true;
     updateChevronLight(dialedAddressSize, isFinalActive);
-
-    playSoundEvent(StargateSoundEventEnum.INCOMING);
-    sendRenderingUpdate(EnumGateAction.LIGHT_UP_CHEVRONS, dialedAddressSize, true);
   }
 
   @Override
