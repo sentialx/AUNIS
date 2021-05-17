@@ -6,6 +6,7 @@ import mrjake.aunis.Aunis;
 import mrjake.aunis.block.stargate.*;
 import mrjake.aunis.item.CapacitorItemBlock;
 import mrjake.aunis.item.StargateMilkyWayMemberItemBlock;
+import mrjake.aunis.item.StargatePegasusMemberItemBlock;
 import mrjake.aunis.item.StargateUniverseMemberItemBlock;
 import mrjake.aunis.tileentity.BeamerTile;
 import mrjake.aunis.tileentity.CapacitorTile;
@@ -14,6 +15,8 @@ import mrjake.aunis.tileentity.TRControllerTile;
 import mrjake.aunis.tileentity.TransportRingsTile;
 import mrjake.aunis.tileentity.stargate.StargateMilkyWayBaseTile;
 import mrjake.aunis.tileentity.stargate.StargateMilkyWayMemberTile;
+import mrjake.aunis.tileentity.stargate.StargatePegasusBaseTile;
+import mrjake.aunis.tileentity.stargate.StargatePegasusMemberTile;
 import mrjake.aunis.tileentity.stargate.StargateOrlinBaseTile;
 import mrjake.aunis.tileentity.stargate.StargateOrlinMemberTile;
 import mrjake.aunis.tileentity.stargate.StargateUniverseBaseTile;
@@ -69,6 +72,7 @@ public class AunisBlocks {
 
 		STARGATE_MILKY_WAY_BASE_BLOCK,
 		STARGATE_UNIVERSE_BASE_BLOCK,
+		STARGATE_PEGASUS_BASE_BLOCK,
 		STARGATE_ORLIN_BASE_BLOCK,
 		STARGATE_ORLIN_MEMBER_BLOCK,
 
@@ -89,15 +93,18 @@ public class AunisBlocks {
 		registry.registerAll(blocks);
 		registry.register(STARGATE_MILKY_WAY_MEMBER_BLOCK);
 		registry.register(STARGATE_UNIVERSE_MEMBER_BLOCK);
+		registry.register(STARGATE_PEGASUS_MEMBER_BLOCK);
 		registry.register(CAPACITOR_BLOCK);
 
 		GameRegistry.registerTileEntity(StargateMilkyWayBaseTile.class, AunisBlocks.STARGATE_MILKY_WAY_BASE_BLOCK.getRegistryName());
 		GameRegistry.registerTileEntity(StargateUniverseBaseTile.class, AunisBlocks.STARGATE_UNIVERSE_BASE_BLOCK.getRegistryName());
 		GameRegistry.registerTileEntity(StargateOrlinBaseTile.class, AunisBlocks.STARGATE_ORLIN_BASE_BLOCK.getRegistryName());
+		GameRegistry.registerTileEntity(StargatePegasusBaseTile.class, AunisBlocks.STARGATE_PEGASUS_BASE_BLOCK.getRegistryName());
 
 		GameRegistry.registerTileEntity(StargateMilkyWayMemberTile.class, AunisBlocks.STARGATE_MILKY_WAY_MEMBER_BLOCK.getRegistryName());
 		GameRegistry.registerTileEntity(StargateUniverseMemberTile.class, AunisBlocks.STARGATE_UNIVERSE_MEMBER_BLOCK.getRegistryName());
 		GameRegistry.registerTileEntity(StargateOrlinMemberTile.class, AunisBlocks.STARGATE_ORLIN_MEMBER_BLOCK.getRegistryName());
+		GameRegistry.registerTileEntity(StargatePegasusMemberTile.class, AunisBlocks.STARGATE_PEGASUS_MEMBER_BLOCK.getRegistryName());
 		GameRegistry.registerTileEntity(DHDTile.class, AunisBlocks.DHD_BLOCK.getRegistryName());
 		GameRegistry.registerTileEntity(TransportRingsTile.class, AunisBlocks.TRANSPORT_RINGS_BLOCK.getRegistryName());
 		GameRegistry.registerTileEntity(TRControllerTile.class, AunisBlocks.TR_CONTROLLER_BLOCK.getRegistryName());
@@ -114,6 +121,7 @@ public class AunisBlocks {
 
 		registry.register(new StargateMilkyWayMemberItemBlock(STARGATE_MILKY_WAY_MEMBER_BLOCK));
 		registry.register(new StargateUniverseMemberItemBlock(STARGATE_UNIVERSE_MEMBER_BLOCK));
+		registry.register(new StargatePegasusMemberItemBlock(STARGATE_PEGASUS_MEMBER_BLOCK));
 		registry.register(new CapacitorItemBlock(CAPACITOR_BLOCK));
 	}
 
@@ -127,6 +135,8 @@ public class AunisBlocks {
 		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(STARGATE_MILKY_WAY_MEMBER_BLOCK), STARGATE_MILKY_WAY_MEMBER_BLOCK.CHEVRON_META, new ModelResourceLocation("aunis:stargate_milkyway_chevron_block"));
 		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(STARGATE_UNIVERSE_MEMBER_BLOCK), STARGATE_UNIVERSE_MEMBER_BLOCK.RING_META, new ModelResourceLocation("aunis:stargate_universe_ring_block"));
 		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(STARGATE_UNIVERSE_MEMBER_BLOCK), STARGATE_UNIVERSE_MEMBER_BLOCK.CHEVRON_META, new ModelResourceLocation("aunis:stargate_universe_chevron_block"));
+		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(STARGATE_PEGASUS_MEMBER_BLOCK), STARGATE_PEGASUS_MEMBER_BLOCK.RING_META, new ModelResourceLocation("aunis:stargate_pegasus_ring_block"));
+		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(STARGATE_PEGASUS_MEMBER_BLOCK), STARGATE_PEGASUS_MEMBER_BLOCK.CHEVRON_META, new ModelResourceLocation("aunis:stargate_pegasus_chevron_block"));
 
 		ModelLoader.setCustomModelResourceLocation(ItemBlock.getItemFromBlock(CAPACITOR_BLOCK), 0, new ModelResourceLocation(CAPACITOR_BLOCK.getRegistryName(), "inventory"));
 	}

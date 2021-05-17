@@ -28,6 +28,8 @@ minecraft {
 
     replaceIn "src/main/java/mrjake/aunis/Aunis.java"
     replace '${version}', mod_version
+
+    runDir = 'run'
 }
 
 repositories {

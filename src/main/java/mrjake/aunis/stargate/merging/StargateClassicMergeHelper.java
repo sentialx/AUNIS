@@ -1,6 +1,9 @@
 package mrjake.aunis.stargate.merging;
 
 import mrjake.aunis.AunisProps;
+import mrjake.aunis.block.stargate.StargateAbstractBaseBlock;
+import mrjake.aunis.block.stargate.StargateClassicBaseBlock;
+import mrjake.aunis.block.stargate.StargateClassicMemberBlock;
 import mrjake.aunis.block.stargate.StargateMilkyWayBaseBlock;
 import mrjake.aunis.block.stargate.StargateMilkyWayMemberBlock;
 import mrjake.aunis.stargate.EnumMemberVariant;
@@ -111,10 +114,12 @@ public abstract class StargateClassicMergeHelper extends StargateAbstractMergeHe
 
 		int meta = stack.getMetadata();
 
-		if (meta == getMemberBlock().RING_META)
+		StargateClassicMemberBlock memberBlock = (StargateClassicMemberBlock) getMemberBlock();
+
+		if (meta == memberBlock.RING_META)
 			return EnumMemberVariant.RING;
 
-		if (meta == getMemberBlock().CHEVRON_META)
+		if (meta == memberBlock.CHEVRON_META)
 			return EnumMemberVariant.CHEVRON;
 
 		return null;

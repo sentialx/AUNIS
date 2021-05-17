@@ -41,6 +41,9 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
 public abstract class StargateClassicMemberBlock extends StargateAbstractMemberBlock {
+	public final int RING_META = getMetaFromState(getDefaultState().withProperty(AunisProps.MEMBER_VARIANT, EnumMemberVariant.RING));
+	public final int CHEVRON_META = getMetaFromState(getDefaultState().withProperty(AunisProps.MEMBER_VARIANT, EnumMemberVariant.CHEVRON));
+
 	public StargateClassicMemberBlock(String blockName) {
 		super(blockName);
 
