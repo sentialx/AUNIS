@@ -9,7 +9,7 @@ import mrjake.aunis.Aunis;
 import mrjake.aunis.loader.model.ModelLoader;
 import net.minecraft.util.ResourceLocation;
 
-public enum SymbolMilkyWayEnum implements SymbolInterface {
+public enum SymbolMilkyWayEnum implements SymbolInterface, DHDSymbolInterface {
 	SCULPTOR(0, 19, "Sculptor", "0.obj"),
 	SCORPIUS(1, 8, "Scorpius", "1.obj"),
 	CENTAURUS(2, 4, "Centaurus", "2.obj"),

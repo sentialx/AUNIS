@@ -266,21 +266,26 @@ public class DHDTile extends TileEntity implements ILinkable, IUpgradable, State
 			hadControlCrystal = hasControlCrystal;
 		}
 	}
+
+	// -----------------------------------------------------------------------------
+	// Sounds
+
+	// TODO(sentialx): abstract method to be overriden
+	protected SoundEventEnum getSoundEvent(DHDSymbolInterface symbol) {
+		if (symbol.brb()) return SoundEventEnum.DHD_MILKYWAY_PRESS_BRB;
+		return SoundEventEnum.DHD_MILKYWAY_PRESS;
+	} 
 	 
 	// -----------------------------------------------------------------------------
 	// Symbol activation
 	
-	public void activateSymbol(SymbolMilkyWayEnum symbol) {	
+	public void activateSymbol(DHDSymbolInterface symbol) {	
 		// By Glen Jolley from his unaccepted PR
 		StargateAbstractBaseTile gateTile = getLinkedGate(world);
 
 		// When using OC to dial, don't play sound of the DHD button press
 		if (!gateTile.getStargateState().dialingComputer()) {
-			
-			if (symbol.brb())
-				AunisSoundHelper.playSoundEvent(world, pos, SoundEventEnum.DHD_MILKYWAY_PRESS_BRB);
-			else
-				AunisSoundHelper.playSoundEvent(world, pos, SoundEventEnum.DHD_MILKYWAY_PRESS);
+			AunisSoundHelper.playSoundEvent(world, pos, getSoundEvent(symbol));
 		}
 		
         world.notifyNeighborsOfStateChange(pos, AunisBlocks.DHD_BLOCK, true);
