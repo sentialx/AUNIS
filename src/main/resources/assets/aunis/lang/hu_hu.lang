@@ -20,12 +20,14 @@ item.aunis.naquadah_alloy_raw.name=Nakvada Ötvözetrúd
 
 tile.aunis.invisible_block.name=Nem láthatsz engem blokk
 
+tile.aunis.dhd_block.name=Tárcsázókészülék
+
+tile.aunis.capacitor_block.name=Kondenzátor
+tile.aunis.capacitor_block_empty.name=Kondenzátor (Üres)
+
 tile.aunis.stargate_milkyway_base_block.name=Csillagkapu Alap (Tejútrendszer)
 tile.aunis.stargate_milkyway_ring_block.name=Csillagkapu Gyűrű (Tejútrendszer)
 tile.aunis.stargate_milkyway_chevron_block.name=Csillagkapu Ékzár (Tejútrendszer)
-tile.aunis.dhd_block.name=Tárcsázókészülék
-tile.aunis.capacitor_block.name=Kondenzátor
-tile.aunis.capacitor_block_empty.name=Kondenzátor (Üres)
 
 tile.aunis.stargate_orlin_base_block.name=Csillagkapu Alap (Orlin)
 tile.aunis.stargate_orlin_member_block.name=Csillagkapu Gyűrű (Orlin)
@@ -33,6 +35,10 @@ tile.aunis.stargate_orlin_member_block.name=Csillagkapu Gyűrű (Orlin)
 tile.aunis.stargate_universe_base_block.name=Csillagkapu Alap (Univerzum)
 tile.aunis.stargate_universe_chevron_block.name=Csillagkapu Ékzár (Univerzum)
 tile.aunis.stargate_universe_ring_block.name=Csillagkapu Gyűrű (Univerzum)
+
+tile.aunis.stargate_pegasus_base_block.name=Csillagkapu Alap (Pegasus)
+tile.aunis.stargate_pegasus_chevron_block.name=Csillagkapu Ékzár (Pegasus)
+tile.aunis.stargate_pegasus_ring_block.name=Csillagkapu Gyűrű (Pegasus)
 
 item.aunis.crystal_fragment.name=Kristálymag
 item.aunis.crystal_blank.name=Üres Kristály

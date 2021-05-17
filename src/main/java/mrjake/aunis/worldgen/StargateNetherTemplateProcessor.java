@@ -13,8 +13,8 @@ public class StargateNetherTemplateProcessor implements ITemplateProcessor {
 
 	@Override
 	public BlockInfo processBlock(World world, BlockPos pos, BlockInfo blockInfoIn) {
-		if (StargateMilkyWayMergeHelper.BASE_MATCHER.apply(blockInfoIn.blockState) ||
-			StargateMilkyWayMergeHelper.MEMBER_MATCHER.apply(blockInfoIn.blockState) ||
+		if (StargateMilkyWayMergeHelper.INSTANCE.BASE_MATCHER.apply(blockInfoIn.blockState) ||
+			StargateMilkyWayMergeHelper.INSTANCE.MEMBER_MATCHER.apply(blockInfoIn.blockState) ||
 			blockInfoIn.blockState.getBlock() == AunisBlocks.DHD_BLOCK)
 			return blockInfoIn;
 		

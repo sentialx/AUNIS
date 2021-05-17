@@ -368,6 +368,15 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 	protected AunisAxisAlignedBB getRenderBoundingBoxRaw() {
 		return RENDER_BOX;
 	}
+
+	private StargateSizeEnum getStargateSizeConfig(boolean server) {
+		return StargateSizeEnum.SMALL;
+	}
+
+	@Override
+	protected AunisAxisAlignedBB getHorizonTeleportBox(boolean server) {
+		return getStargateSizeConfig(server).teleportBox;
+	}
 	
 	// -----------------------------------------------------------------
 	// States
@@ -585,6 +594,24 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 		}
 			
 		markDirty();
+	}
+
+	// ------------------------------------------------------------------------
+  	// Killing and block vaporizing
+
+	@Override
+	protected AunisAxisAlignedBB getHorizonKillingBox(boolean server) {
+		return getStargateSizeConfig(server).killingBox;
+	}
+
+	@Override
+	protected int getHorizonSegmentCount(boolean server) {
+		return getStargateSizeConfig(server).horizonSegmentCount;
+	}
+
+	@Override
+	protected List<AunisAxisAlignedBB> getGateVaporizingBoxes(boolean server) {
+		return getStargateSizeConfig(server).gateVaporizingBoxes;
 	}
 	
 	// -----------------------------------------------------------------------------

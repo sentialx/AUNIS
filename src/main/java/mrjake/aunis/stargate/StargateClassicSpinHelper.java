@@ -27,13 +27,33 @@ public class StargateClassicSpinHelper {
 	
 	public SymbolTypeEnum symbolType;
 	
-	public boolean isSpinning;
+	private boolean spinning;
 	public SymbolInterface currentSymbol;
 	public EnumSpinDirection direction = EnumSpinDirection.CLOCKWISE;
 	
 	private long spinStartTime;
 	private SymbolInterface targetSymbol;
 	private float targetRotationOffset;
+
+	public boolean isSpinning() {
+		return spinning;
+	}
+
+	public void setSpinning(boolean value) {
+		spinning = value;
+	}
+
+	public SymbolInterface getCurrentSymbol() {
+		return currentSymbol;
+	}
+
+	public void setCurrentSymbol(SymbolInterface symbol) {
+		currentSymbol = symbol;
+	}
+
+	public SymbolInterface getTargetSymbol() {
+		return targetSymbol;
+	}
 	
 	/**
 	 * First phase function (with default values).
@@ -96,7 +116,7 @@ public class StargateClassicSpinHelper {
 		this.symbolType = symbolType;
 		this.currentSymbol = currentSymbol;
 		this.direction = spinDirection;
-		this.isSpinning = isSpinning;
+		this.spinning = isSpinning;
 		this.targetSymbol = targetRingSymbol;
 		this.spinStartTime = spinStartTime;
 	}	
@@ -131,7 +151,7 @@ public class StargateClassicSpinHelper {
 		this.direction = direction;
 		this.spinStartTime = totalWorldTime;
 		
-		isSpinning = true;
+		spinning = true;
 	}
 	
 	private float calculate(float tick) {
@@ -146,7 +166,7 @@ public class StargateClassicSpinHelper {
 			}
 		}
 		
-		isSpinning = false;
+		spinning = false;
 		currentSymbol = targetSymbol;
 		
 		return targetRotationOffset;
@@ -160,7 +180,7 @@ public class StargateClassicSpinHelper {
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(symbolType.id);
 		
-		buf.writeBoolean(isSpinning);
+		buf.writeBoolean(spinning);
 		buf.writeInt(currentSymbol.getId());
 		buf.writeInt(direction.id);
 		
@@ -171,14 +191,14 @@ public class StargateClassicSpinHelper {
 	public void fromBytes(ByteBuf buf) {
 		symbolType = SymbolTypeEnum.valueOf(buf.readInt());
 		
-		isSpinning = buf.readBoolean();
+		spinning = buf.readBoolean();
 		currentSymbol = symbolType.valueOfSymbol(buf.readInt());
 		direction = EnumSpinDirection.valueOf(buf.readInt());
 		
 		spinStartTime = buf.readLong();
 		targetSymbol = symbolType.valueOfSymbol(buf.readInt());
 		
-		if (isSpinning) {
+		if (spinning) {
 			initRotation(spinStartTime, targetSymbol, direction);
 		}		
 	}

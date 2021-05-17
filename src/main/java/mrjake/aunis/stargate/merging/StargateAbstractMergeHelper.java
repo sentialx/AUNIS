@@ -27,7 +27,9 @@ import net.minecraft.world.World;
 
 //ToDo Well, idk if getRingBlocks() should be relative... Maybe return absolute positions too. But not sure
 public abstract class StargateAbstractMergeHelper {
-	
+	public final BlockMatcher BASE_MATCHER = BlockMatcher.forBlock(getBaseBlock());
+	public final BlockMatcher MEMBER_MATCHER = BlockMatcher.forBlock(getMemberBlock());
+
 	/**
 	 * @return {@link List} of {@link BlockPos} pointing to ring blocks. Positions are relative
 	 */
@@ -107,6 +109,11 @@ public abstract class StargateAbstractMergeHelper {
 	 * @return Member block.
 	 */
 	public abstract StargateAbstractMemberBlock getMemberBlock();
+
+	/**
+	 * @return Base block.
+	 */
+	public abstract StargateAbstractBaseBlock getBaseBlock();
 	
 	/**
 	 * Method searches for a {@link StargateMilkyWayBaseBlock} within {@link this#BASE_SEARCH_BOX}

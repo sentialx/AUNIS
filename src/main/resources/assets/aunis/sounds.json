@@ -3,13 +3,13 @@
     "category": "ambient",
     "subtitle": "aunis.subtitle.dhd_milkyway_press",
     "sounds": [
-      "aunis:dhd/dhd_milkyway_press_1",
-      "aunis:dhd/dhd_milkyway_press_2",
-      "aunis:dhd/dhd_milkyway_press_3",
-      "aunis:dhd/dhd_milkyway_press_4",
-      "aunis:dhd/dhd_milkyway_press_5",
-      "aunis:dhd/dhd_milkyway_press_6",
-      "aunis:dhd/dhd_milkyway_press_7"
+      "aunis:dhd/milkyway/dhd_milkyway_press_1",
+      "aunis:dhd/milkyway/dhd_milkyway_press_2",
+      "aunis:dhd/milkyway/dhd_milkyway_press_3",
+      "aunis:dhd/milkyway/dhd_milkyway_press_4",
+      "aunis:dhd/milkyway/dhd_milkyway_press_5",
+      "aunis:dhd/milkyway/dhd_milkyway_press_6",
+      "aunis:dhd/milkyway/dhd_milkyway_press_7"
     ]
   },
   
@@ -17,7 +17,7 @@
     "category": "ambient",
     "subtitle": "aunis.subtitle.dhd_milkyway_press_brb",
     "sounds": [
-      "aunis:dhd/dhd_milkyway_press_brb"
+      "aunis:dhd/milkyway/dhd_milkyway_press_brb"
     ]
   },
   
@@ -25,7 +25,7 @@
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_open",
     "sounds": [
-      "aunis:gate/gate_milkyway_open"
+      "aunis:gate/milkyway/gate_milkyway_open"
     ]
   },
   
@@ -33,7 +33,7 @@
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_close",
     "sounds": [
-      "aunis:gate/gate_milkyway_close"
+      "aunis:gate/milkyway/gate_milkyway_close"
     ]
   },
   
@@ -41,7 +41,7 @@
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_ring_roll",
     "sounds": [
-      "aunis:gate/gate_milkyway_ring_roll"
+      "aunis:gate/milkyway/gate_milkyway_ring_roll"
     ]
   },
   
@@ -49,7 +49,7 @@
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_dial_fail",
     "sounds": [
-      "aunis:gate/gate_milkyway_dial_fail"
+      "aunis:gate/milkyway/gate_milkyway_dial_fail"
     ]
   },
   
@@ -57,15 +57,59 @@
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_dial_fail_computer",
     "sounds": [
-      "aunis:gate/gate_milkyway_dial_fail_computer"
+      "aunis:gate/milkyway/gate_milkyway_dial_fail_computer"
     ]
   },
   
-   "gate_milkyway_incoming": {
+  "gate_milkyway_incoming": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_incoming",
     "sounds": [
-      "aunis:gate/gate_milkyway_incoming"
+      "aunis:gate/milkyway/gate_milkyway_incoming"
+    ]
+  },
+
+  "gate_milkyway_chevron_shut": {
+    "category": "ambient",
+    "subtitle": "aunis.subtitle.gate_milkyway_chevron_shut",
+    "sounds": [
+      "aunis:gate/milkyway/chevron/gate_milkyway_chevron_shut_1",
+      "aunis:gate/milkyway/chevron/gate_milkyway_chevron_shut_2",
+      "aunis:gate/milkyway/chevron/gate_milkyway_chevron_shut_3"
+    ]
+  },
+  
+  "gate_milkyway_chevron_open": {
+    "category": "ambient",
+    "subtitle": "aunis.subtitle.gate_milkyway_chevron_open",
+    "sounds": [
+      "aunis:gate/milkyway/chevron/gate_milkyway_chevron_open_1",
+      "aunis:gate/milkyway/chevron/gate_milkyway_chevron_open_2",
+      "aunis:gate/milkyway/chevron/gate_milkyway_chevron_open_3"
+    ]
+  },
+
+  "gate_pegasus_ring_roll": {
+    "category": "ambient",
+    "subtitle": "aunis.subtitle.gate_pegasus_ring_roll",
+    "sounds": [
+      "aunis:gate/pegasus/gate_pegasus_ring_roll"
+    ]
+  },
+
+  "gate_pegasus_open": {
+    "category": "ambient",
+    "subtitle": "aunis.subtitle.gate_pegasus_open",
+    "sounds": [
+      "aunis:gate/pegasus/gate_pegasus_open"
+    ]
+  },
+
+  "gate_pegasus_chevron_open": {
+    "category": "ambient",
+    "subtitle": "aunis.subtitle.gate_pegasus_chevron_open",
+    "sounds": [
+      "aunis:gate/pegasus/chevron/gate_pegasus_chevron_open_1"
     ]
   },
   
@@ -113,26 +157,6 @@
     "subtitle": "aunis.subtitle.rings_controller_button",
     "sounds": [
       "aunis:transportrings/rings_controller_button"
-    ]
-  },
-  
-  "gate_milkyway_chevron_shut": {
-    "category": "ambient",
-    "subtitle": "aunis.subtitle.gate_milkyway_chevron_shut",
-    "sounds": [
-      "aunis:gate/chevron/gate_milkyway_chevron_shut_1",
-      "aunis:gate/chevron/gate_milkyway_chevron_shut_2",
-      "aunis:gate/chevron/gate_milkyway_chevron_shut_3"
-    ]
-  },
-  
-  "gate_milkyway_chevron_open": {
-    "category": "ambient",
-    "subtitle": "aunis.subtitle.gate_milkyway_chevron_open",
-    "sounds": [
-      "aunis:gate/chevron/gate_milkyway_chevron_open_1",
-      "aunis:gate/chevron/gate_milkyway_chevron_open_2",
-      "aunis:gate/chevron/gate_milkyway_chevron_open_3"
     ]
   },
   

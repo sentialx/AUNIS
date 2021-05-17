@@ -20,12 +20,14 @@ item.aunis.naquadah_alloy_raw.name=Слиток из сплава наквада
 
 tile.aunis.invisible_block.name=Невидимый блок :P
 
+tile.aunis.dhd_block.name=Наборное устройство
+
+tile.aunis.capacitor_block.name=Конденсатор
+tile.aunis.capacitor_block_empty.name=Конденсатор (пустой)
+
 tile.aunis.stargate_milkyway_base_block.name=Основание звёздных врат (Млечный Путь)
 tile.aunis.stargate_milkyway_ring_block.name=Кольцо звёздных врат (Млечный Путь)
 tile.aunis.stargate_milkyway_chevron_block.name=Шеврон звёздных врат (Млечный Путь)
-tile.aunis.dhd_block.name=Наборное устройство
-tile.aunis.capacitor_block.name=Конденсатор
-tile.aunis.capacitor_block_empty.name=Конденсатор (пустой)
 
 tile.aunis.stargate_orlin_base_block.open_count=Накопленная энергия: %s / %s
 tile.aunis.stargate_orlin_base_block.name=Основание звёздных врат (Орлин)
@@ -34,6 +36,10 @@ tile.aunis.stargate_orlin_member_block.name=Кольцо звёздных вра
 tile.aunis.stargate_universe_base_block.name=Основание звёздных врат (Вселенная)
 tile.aunis.stargate_universe_chevron_block.name=Шеврон звёздных врат (Вселенная)
 tile.aunis.stargate_universe_ring_block.name=Кольцо звёздных врат (Вселенная)
+
+tile.aunis.stargate_pegasus_base_block.name=Основание звёздных врат (пегас)
+tile.aunis.stargate_pegasus_chevron_block.name=Шеврон звёздных врат (пегас)
+tile.aunis.stargate_pegasus_ring_block.name=Кольцо звёздных врат (пегас)
 
 item.aunis.crystal_fragment.name=Семя кристалла
 item.aunis.crystal_blank.name=Пустой кристалл

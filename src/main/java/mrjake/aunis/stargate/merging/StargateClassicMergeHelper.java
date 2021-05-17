@@ -16,7 +16,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public abstract class StargateClassicMergeHelper extends StargateAbstractMergeHelper {
-	
 	protected boolean checkMemberBlock(IBlockAccess blockAccess, BlockPos pos, EnumFacing facing, EnumMemberVariant variant) {
 		IBlockState state = blockAccess.getBlockState(pos);
 		
@@ -84,5 +83,36 @@ public abstract class StargateClassicMergeHelper extends StargateAbstractMergeHe
 		
 		for (BlockPos pos : getChevronBlocks())
 			updateMemberBasePos(blockAccess, pos.rotate(FacingToRotation.get(baseFacing)).add(basePos), basePos, baseFacing);
+	}
+
+	@Override
+	public boolean matchBase(IBlockState state) {
+		return BASE_MATCHER.apply(state);
+	}
+	
+	@Override
+	public boolean matchMember(IBlockState state) {
+		return MEMBER_MATCHER.apply(state);
+	}
+
+	@Override
+	@Nullable
+	public EnumMemberVariant getMemberVariantFromItemStack(ItemStack stack) {
+		if (!(stack.getItem() instanceof ItemBlock))
+			return null;
+		
+		// No need to use .equals() because blocks are singletons
+		if (((ItemBlock) stack.getItem()).getBlock() != getMemberBlock())
+			return null;
+		
+		int meta = stack.getMetadata();
+		
+		if (meta == getMemberBlock().RING_META)
+			return EnumMemberVariant.RING;
+		
+		if (meta == getMemberBlock().CHEVRON_META)
+			return EnumMemberVariant.CHEVRON;
+		
+		return null;
 	}
 }

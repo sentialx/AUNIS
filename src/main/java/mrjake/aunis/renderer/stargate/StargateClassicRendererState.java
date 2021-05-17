@@ -35,7 +35,7 @@ public abstract class StargateClassicRendererState extends StargateAbstractRende
 	
 	// Spin		
 	// Saved
-	public StargateClassicSpinHelper spinHelper;
+	public ISpinHelper spinHelper;
 	
 	
 	// Biome override

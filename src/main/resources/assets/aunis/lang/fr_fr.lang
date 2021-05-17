@@ -6,7 +6,7 @@ item.aunis.crystal_control_dhd.name=Cristal de contrôle du DHD
 item.aunis.dialer_fast.name=Numérotation rapide (débogage)
 
 item.aunis.crystal_glyph_dhd.name=Cristal des glyphes du DHD
-item.aunis.crystal_glyph_stargate.name=Cristal des glyphes de StarGate
+item.aunis.crystal_glyph_stargate.name=Cristal des glyphes de Stargate
 item.aunis.crystal_glyph_milkyway.name=Cristal des glyphes de la Voie lactée
 item.aunis.crystal_glyph_pegasus.name=Cristal des glyphes de Pégase
 item.aunis.crystal_glyph_universe.name=Cristal des glyphes de l'univers
@@ -20,20 +20,26 @@ item.aunis.naquadah_alloy_raw.name=Lingot d'alliage de Naquadah
 
 tile.aunis.invisible_block.name=Tu ne peux pas me voir bloc
 
-tile.aunis.stargate_milkyway_base_block.name=Base StarGate (Voie lactée)
-tile.aunis.stargate_milkyway_ring_block.name=Anneau StarGate (Voie lactée)
-tile.aunis.stargate_milkyway_chevron_block.name=Chevron StarGate (Voie lactée)
 tile.aunis.dhd_block.name=Dial Home Device (DHD)
+
 tile.aunis.capacitor_block.name=Banque de condensateurs
 tile.aunis.capacitor_block_empty.name=Banque de condensateurs (vide)
 
-tile.aunis.stargate_orlin_base_block.open_count=Comptage ouvert : %s / %s
-tile.aunis.stargate_orlin_base_block.name=Base StarGate (Orlin)
-tile.aunis.stargate_orlin_member_block.name=Anneau StarGate (Orlin)
+tile.aunis.stargate_milkyway_base_block.name=Base Stargate (Voie lactée)
+tile.aunis.stargate_milkyway_ring_block.name=Anneau Stargate (Voie lactée)
+tile.aunis.stargate_milkyway_chevron_block.name=Chevron Stargate (Voie lactée)
 
-tile.aunis.stargate_universe_base_block.name=Base StarGate (Univers)
-tile.aunis.stargate_universe_chevron_block.name=Chevron StarGate (Univers)
-tile.aunis.stargate_universe_ring_block.name=Anneau StarGate (Univers)
+tile.aunis.stargate_orlin_base_block.open_count=Comptage ouvert : %s / %s
+tile.aunis.stargate_orlin_base_block.name=Base Stargate (Orlin)
+tile.aunis.stargate_orlin_member_block.name=Anneau Stargate (Orlin)
+
+tile.aunis.stargate_universe_base_block.name=Base Stargate (Univers)
+tile.aunis.stargate_universe_chevron_block.name=Chevron Stargate (Univers)
+tile.aunis.stargate_universe_ring_block.name=Anneau Stargate (Univers)
+
+tile.aunis.stargate_pegasus_base_block.name=Base Stargate (Pegasus)
+tile.aunis.stargate_pegasus_chevron_block.name=Chevron Stargate (Pegasus)
+tile.aunis.stargate_pegasus_ring_block.name=Anneau Stargate (Pegasus)
 
 item.aunis.crystal_fragment.name=graine de cristal
 item.aunis.crystal_blank.name=Cristal vierge

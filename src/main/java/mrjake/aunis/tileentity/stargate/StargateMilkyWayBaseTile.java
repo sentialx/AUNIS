@@ -63,11 +63,6 @@ public class StargateMilkyWayBaseTile extends StargateClassicDHDLinkableBaseTile
 		return SymbolTypeEnum.MILKYWAY;
 	}
 	
-	@Override
-	protected AunisAxisAlignedBB getHorizonTeleportBox(boolean server) {
-		return getStargateSizeConfig(server).teleportBox;
-	}
-	
 	public void addSymbolToAddressDHD(SymbolMilkyWayEnum symbol) {		
 		addSymbolToAddress(symbol);
 		stargateState = EnumStargateState.DIALING;
@@ -201,25 +196,6 @@ public class StargateMilkyWayBaseTile extends StargateClassicDHDLinkableBaseTile
 	public EnumSet<BiomeOverlayEnum> getSupportedOverlays() {
 		return SUPPORTED_OVERLAYS;
 	}
-	
-	// ------------------------------------------------------------------------
-	// Killing and block vaporizing                                                                          
-		
-	@Override
-	protected AunisAxisAlignedBB getHorizonKillingBox(boolean server) {
-		return getStargateSizeConfig(server).killingBox;
-	}
-	
-	@Override
-	protected int getHorizonSegmentCount(boolean server) {
-		return getStargateSizeConfig(server).horizonSegmentCount;
-	}
-	
-	@Override
-	protected  List<AunisAxisAlignedBB> getGateVaporizingBoxes(boolean server) {		
-		return getStargateSizeConfig(server).gateVaporizingBoxes;
-	}
-	
 	
 	// ------------------------------------------------------------------------
 	// Rendering

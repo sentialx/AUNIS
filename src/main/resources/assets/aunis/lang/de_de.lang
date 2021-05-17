@@ -20,12 +20,14 @@ item.aunis.naquadah_alloy_raw.name=Naquadahlegierungsbarren
 
 tile.aunis.invisible_block.name=Du kannst mich nicht sehen Block
 
+tile.aunis.dhd_block.name=Dial Home Device (DHD)
+
+tile.aunis.capacitor_block.name=Kondensatorbatterie
+tile.aunis.capacitor_block_empty.name=Kondensatorbatterie (Leer)
+
 tile.aunis.stargate_milkyway_base_block.name=Stargate Basis (Milchstraße)
 tile.aunis.stargate_milkyway_ring_block.name=Stargate Ring (Milchstraße)
 tile.aunis.stargate_milkyway_chevron_block.name=Stargate Chevron (Milchstraße)
-tile.aunis.dhd_block.name=Dial Home Device (DHD)
-tile.aunis.capacitor_block.name=Kondensatorbatterie
-tile.aunis.capacitor_block_empty.name=Kondensatorbatterie (Leer)
 
 tile.aunis.stargate_orlin_base_block.name=Stargate Basis (Orlin)
 tile.aunis.stargate_orlin_member_block.name=Stargate Ring (Orlin)
@@ -33,6 +35,10 @@ tile.aunis.stargate_orlin_member_block.name=Stargate Ring (Orlin)
 tile.aunis.stargate_universe_base_block.name=Stargate Basis (Universe)
 tile.aunis.stargate_universe_chevron_block.name=Stargate Chevron (Universe)
 tile.aunis.stargate_universe_ring_block.name=Stargate Ring (Universe)
+
+tile.aunis.stargate_pegasus_base_block.name=Stargate Basis (Pegasus)
+tile.aunis.stargate_pegasus_chevron_block.name=Stargate Chevron (Pegasus)
+tile.aunis.stargate_pegasus_ring_block.name=Stargate Ring (Pegasus)
 
 item.aunis.crystal_fragment.name=Kristallkeim
 item.aunis.crystal_blank.name=Leerer Kristall
