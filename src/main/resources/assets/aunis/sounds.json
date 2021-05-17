@@ -30,7 +30,7 @@
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_pegasus_open",
     "sounds": [
-      "aunis:gate/gate_pegasus_open"
+      "aunis:gate/pegasus/gate_pegasus_open"
     ]
   },
   "gate_milkyway_close": {
@@ -51,7 +51,7 @@
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_pegasus_ring_roll",
     "sounds": [
-      "aunis:gate/gate_pegasus_ring_roll"
+      "aunis:gate/pegasus/gate_pegasus_ring_roll"
     ]
   },
   "gate_milkyway_dial_fail": {
@@ -68,11 +68,25 @@
       "aunis:gate/gate_milkyway_dial_fail_computer"
     ]
   },
+  "gate_pegasus_dial_fail": {
+    "category": "ambient",
+    "subtitle": "aunis.subtitle.gate_pegasus_dial_fail",
+    "sounds": [
+      "aunis:gate/pegasus/gate_pegasus_dial_fail"
+    ]
+  },
   "gate_milkyway_incoming": {
     "category": "ambient",
     "subtitle": "aunis.subtitle.gate_milkyway_incoming",
     "sounds": [
       "aunis:gate/gate_milkyway_incoming"
+    ]
+  },
+  "gate_pegasus_incoming": {
+    "category": "ambient",
+    "subtitle": "aunis.subtitle.gate_pegasus_incoming",
+    "sounds": [
+      "aunis:gate/pegasus/gate_pegasus_incoming"
     ]
   },
   "wormhole_loop": {

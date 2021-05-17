@@ -99,7 +99,7 @@ public class EventHorizon {
 					/*else {
 						// TODO Back side killing
 						// Make custom message appear
-						// entity.onKillCommand();
+						entity.onKillCommand();
 					}*/
 				}
 			}

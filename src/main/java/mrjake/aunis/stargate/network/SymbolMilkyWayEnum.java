@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.Random;
 
 import mrjake.aunis.Aunis;
+import mrjake.aunis.config.AunisConfig;
+import mrjake.aunis.config.StargateDimensionConfig;
 import mrjake.aunis.loader.model.ModelLoader;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.DimensionManager;
 
 public enum SymbolMilkyWayEnum implements SymbolInterface {
 	SCULPTOR(0, 19, "Sculptor", "0.obj"),
@@ -150,11 +153,17 @@ public enum SymbolMilkyWayEnum implements SymbolInterface {
 	}
 
 	public static int getMinimalSymbolCountTo(SymbolTypeEnum symbolType, boolean localDial) {
+
+		boolean eightChevrons = AunisConfig.stargateConfig.pegAndMilkUseEightChevrons;
+
 		switch (symbolType) {
 			case MILKYWAY:
-			case PEGASUS:
 				return localDial ? 7 : 8;
-				
+			case PEGASUS:
+				if(eightChevrons)
+					return 8;
+				else
+					return localDial ? 7 : 8;
 			case UNIVERSE:
 				return 9;
 		}

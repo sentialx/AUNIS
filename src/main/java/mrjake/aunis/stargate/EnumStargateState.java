@@ -11,6 +11,7 @@ public enum EnumStargateState {
 	ENGAGED_INITIATING(4),
 	UNSTABLE(5),
 	FAILING(6);
+
 	
 	public int id;
 	

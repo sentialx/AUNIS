@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import mrjake.aunis.Aunis;
 import mrjake.aunis.stargate.network.SymbolInterface;
 import mrjake.aunis.stargate.network.SymbolTypeEnum;
+import mrjake.aunis.stargate.network.SymbolUniverseEnum;
 import mrjake.aunis.util.math.MathFunction;
 import mrjake.aunis.util.math.MathFunctionLinear;
 import mrjake.aunis.util.math.MathFunctionQuadratic;

@@ -1,7 +1,6 @@
 package mrjake.aunis.tileentity.stargate;
 
 import mrjake.aunis.Aunis;
-import mrjake.aunis.block.AunisBlocks;
 import mrjake.aunis.config.AunisConfig;
 import mrjake.aunis.config.StargateDimensionConfig;
 import mrjake.aunis.config.StargateSizeEnum;
@@ -18,7 +17,6 @@ import mrjake.aunis.sound.StargateSoundPositionedEnum;
 import mrjake.aunis.stargate.EnumScheduledTask;
 import mrjake.aunis.stargate.EnumSpinDirection;
 import mrjake.aunis.stargate.EnumStargateState;
-import mrjake.aunis.stargate.StargatePegasusSpinHelper;
 import mrjake.aunis.stargate.merging.StargateAbstractMergeHelper;
 import mrjake.aunis.stargate.merging.StargatePegasusMergeHelper;
 import mrjake.aunis.stargate.network.*;
@@ -27,24 +25,22 @@ import mrjake.aunis.state.StargateRendererActionState.EnumGateAction;
 import mrjake.aunis.state.StargateSpinState;
 import mrjake.aunis.state.State;
 import mrjake.aunis.state.StateTypeEnum;
-import mrjake.aunis.tileentity.DHDTile;
-import mrjake.aunis.tileentity.DHDTile.DHDUpgradeEnum;
 import mrjake.aunis.tileentity.util.ScheduledTask;
 import mrjake.aunis.util.AunisAxisAlignedBB;
 import mrjake.aunis.util.ILinkable;
-import mrjake.aunis.util.LinkingHelper;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class StargatePegasusBaseTile extends StargateClassicBaseTile implements ILinkable {
   // ------------------------------------------------------------------------
@@ -54,20 +50,19 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
   protected void disconnectGate() {
     super.disconnectGate();
 
-    if (isLinkedAndDHDOperational()) getLinkedDHD(world).clearSymbols();
   }
 
   @Override
   protected void failGate() {
     super.failGate();
-
-    if (isLinkedAndDHDOperational()) getLinkedDHD(world).clearSymbols();
   }
 
   @Override
   protected void addFailedTaskAndPlaySound() {
-    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_FAIL, stargateState.dialingComputer() ? 83 : 53));
-    playSoundEvent(StargateSoundEventEnum.DIAL_FAILED);
+    if(stargateState == EnumStargateState.DIALING || stargateState == EnumStargateState.DIALING_COMPUTER || stargateState == EnumStargateState.IDLE ) {
+      addTask(new ScheduledTask(EnumScheduledTask.STARGATE_FAIL, stargateState.dialingComputer() ? 83 : 53));
+      playSoundEvent(StargateSoundEventEnum.DIAL_FAILED);
+    }
   }
 
 
@@ -77,10 +72,6 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
   @Override
   public void openGate(StargatePos targetGatePos, boolean isInitiating) {
     super.openGate(targetGatePos, isInitiating);
-
-    if (isLinkedAndDHDOperational()) {
-      getLinkedDHD(world).activateSymbol(SymbolMilkyWayEnum.BRB);
-    }
   }
 
   // ------------------------------------------------------------------------
@@ -88,7 +79,7 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
 
   @Override
   public SymbolTypeEnum getSymbolType() {
-    return SymbolTypeEnum.MILKYWAY;
+    return SymbolTypeEnum.PEGASUS;
   }
 
   @Override
@@ -96,31 +87,16 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
     return getStargateSizeConfig(server).teleportBox;
   }
 
-
-  public void addSymbolToAddressDHD(SymbolMilkyWayEnum symbol) {
-    addSymbolToAddress(symbol);
-    stargateState = EnumStargateState.DIALING;
-
-    if (stargateWillLock(symbol)) {
-      isFinalActive = true;
-    }
-
-    sendSignal(null, "stargate_dhd_chevron_engaged", new Object[]{dialedAddress.size(), isFinalActive, symbol.englishName});
-    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_ACTIVATE_CHEVRON, 10));
-
-    markDirty();
-  }
-
   @Override
   protected int getMaxChevrons() {
-    return isLinkedAndDHDOperational() && stargateState != EnumStargateState.DIALING_COMPUTER && !getLinkedDHD(world).hasUpgrade(DHDUpgradeEnum.CHEVRON_UPGRADE) ? 7 : 9;
+    return 9;
   }
 
   @Override
   public void addSymbolToAddress(SymbolInterface symbol) {
     if (symbol.origin() && dialedAddress.size() >= 6 && dialedAddress.equals(StargateNetwork.EARTH_ADDRESS) && !network.isStargateInNetwork(StargateNetwork.EARTH_ADDRESS)) {
       if (StargateDimensionConfig.netherOverworld8thSymbol()) {
-        if (dialedAddress.size() == 7 && dialedAddress.getLast() == SymbolMilkyWayEnum.SERPENSCAPUT) {
+        if (dialedAddress.size() == 7 && dialedAddress.getLast() == SymbolPegasusEnum.ACJESIS) {
           dialedAddress.clear();
           dialedAddress.addAll(network.getLastActivatedOrlins().subList(0, 7));
         }
@@ -131,18 +107,83 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
     }
 
     super.addSymbolToAddress(symbol);
-
-    if (isLinkedAndDHDOperational()) {
-      getLinkedDHD(world).activateSymbol((SymbolMilkyWayEnum) symbol);
-    }
   }
 
 
-  public void incomingWormhole(int dialedAddressSize) {
+  public void incomingWormhole(int dialedAddressSize){
     super.incomingWormhole(dialedAddressSize);
 
-    if (isLinkedAndDHDOperational()) {
-      getLinkedDHD(world).clearSymbols();
+    prepareGateToConnect(dialedAddressSize);
+  }
+
+
+  public void prepareGateToConnect(int dialedAddressSize){
+    // --- do spin animation ---
+
+    if(stargateState.dialingComputer()) {
+      addTask(new ScheduledTask(EnumScheduledTask.STARGATE_SPIN_FINISHED, 0));
+    }
+
+    boolean allowIncomingAnimation = AunisConfig.stargateConfig.allowIncomingAnimations;
+
+    if(allowIncomingAnimation) {
+      playPositionedSound(StargateSoundPositionedEnum.GATE_RING_ROLL, true);
+      addTask(new ScheduledTask(EnumScheduledTask.STARGATE_SPIN_FINISHED, 40));
+/*
+    spinDirection = EnumSpinDirection.COUNTER_CLOCKWISE;
+
+    ChevronEnum targetChevron = ChevronEnum.C1;
+
+    ChevronEnum currentChevron = ChevronEnum.C7;
+
+    int indexDiff = slotFromChevron(currentChevron) - slotFromChevron(targetChevron);
+
+    float distance = (float) Math.abs(indexDiff);
+    if (distance <= 20) distance += 36;
+
+    int duration = (int) (distance);
+
+
+    AunisPacketHandler.INSTANCE.sendToAllTracking(new StateUpdatePacketToClient(pos, StateTypeEnum.SPIN_STATE, new StargateSpinState(SymbolPegasusEnum.AAXEL, spinDirection, false)), targetPoint);
+    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_SPIN_FINISHED, duration - 1));
+    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_OPEN, duration - 1));
+    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_DIM, duration - 1));
+
+    isSpinning = true;
+    spinStartTime = world.getTotalWorldTime();
+    markDirty();
+*/
+
+      // ----------
+
+      final int[] i = {1};
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        public void run() {
+          if (i[0] <= dialedAddressSize) {
+            sendRenderingUpdate(EnumGateAction.LIGHT_UP_CHEVRONS, i[0], false);
+            playSoundEvent(StargateSoundEventEnum.CHEVRON_OPEN);
+            i[0]++;
+          } else {
+            timer.cancel();
+          }
+        }
+      }, 0, 400);
+    }
+    else{
+      final int[] i = {1};
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        public void run() {
+          if (i[0] <= 2) {
+            sendRenderingUpdate(EnumGateAction.LIGHT_UP_CHEVRONS, dialedAddressSize, false);
+            i[0]++;
+          } else {
+            timer.cancel();
+          }
+        }
+      }, 0, 100);
+      playSoundEvent(StargateSoundEventEnum.CHEVRON_OPEN);
     }
   }
 
@@ -153,18 +194,11 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
   @Override
   public void onGateBroken() {
     super.onGateBroken();
-
-    if (isLinked()) {
-      getLinkedDHD(world).clearSymbols();
-      getLinkedDHD(world).setLinkedGate(null, -1);
-      setLinkedDHD(null, -1);
-    }
   }
 
   @Override
   protected void onGateMerged() {
     super.onGateMerged();
-    this.updateLinkStatus();
   }
 
   @Override
@@ -180,49 +214,9 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
 
   private int linkId = -1;
 
-  @Nullable
-  public DHDTile getLinkedDHD(World world) {
-    if (linkedDHD == null) return null;
-
-    return (DHDTile) world.getTileEntity(linkedDHD);
-  }
-
-  public boolean isLinked() {
-    return linkedDHD != null && world.getTileEntity(linkedDHD) instanceof DHDTile;
-  }
-
-  public boolean isLinkedAndDHDOperational() {
-    if (!isLinked()) return false;
-
-    DHDTile dhdTile = getLinkedDHD(world);
-    if (!dhdTile.hasControlCrystal()) return false;
-
-    return true;
-  }
-
-  public void setLinkedDHD(BlockPos dhdPos, int linkId) {
-    this.linkedDHD = dhdPos;
-    this.linkId = linkId;
-
-    markDirty();
-  }
-
-  public void updateLinkStatus() {
-    BlockPos closestDhd = LinkingHelper.findClosestUnlinked(world, pos, LinkingHelper.getDhdRange(), AunisBlocks.DHD_BLOCK, this.getLinkId());
-    int linkId = LinkingHelper.getLinkId();
-
-    if (closestDhd != null) {
-      DHDTile dhdTile = (DHDTile) world.getTileEntity(closestDhd);
-
-      dhdTile.setLinkedGate(pos, linkId);
-      setLinkedDHD(closestDhd, linkId);
-      markDirty();
-    }
-  }
-
   @Override
   public boolean canLinkTo() {
-    return isMerged() && !isLinked();
+    return isMerged();
   }
 
   @Override
@@ -235,11 +229,6 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
 
   @Override
   public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-    if (isLinked()) {
-      compound.setLong("linkedDHD", linkedDHD.toLong());
-      compound.setInteger("linkId", linkId);
-    }
-
     compound.setInteger("stargateSize", stargateSize.id);
 
     return super.writeToNBT(compound);
@@ -261,7 +250,6 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
 
   @Override
   public boolean prepare(ICommandSender sender, ICommand command) {
-    setLinkedDHD(null, -1);
 
     return super.prepare(sender, command);
   }
@@ -288,9 +276,11 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
       case CLOSE:
         return SoundEventEnum.GATE_MILKYWAY_CLOSE;
       case DIAL_FAILED:
-        return stargateState.dialingComputer() ? SoundEventEnum.GATE_MILKYWAY_DIAL_FAILED_COMPUTER : SoundEventEnum.GATE_MILKYWAY_DIAL_FAILED;
+        return stargateState.dialingComputer() ? SoundEventEnum.GATE_PEGASUS_DIAL_FAILED : SoundEventEnum.GATE_PEGASUS_DIAL_FAILED;
       case INCOMING:
         return SoundEventEnum.GATE_MILKYWAY_INCOMING;
+      case PEGASUS_INCOMING:
+        return SoundEventEnum.GATE_PEGASUS_INCOMING;
       case CHEVRON_OPEN:
         return SoundEventEnum.GATE_PEGASUS_CHEVRON_OPEN;
       case CHEVRON_SHUT:
@@ -314,7 +304,7 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
     return StargatePegasusMergeHelper.INSTANCE.checkBlocks(world, pos, facing);
   }
 
-  public static final EnumSet<BiomeOverlayEnum> SUPPORTED_OVERLAYS = EnumSet.of(BiomeOverlayEnum.NORMAL, BiomeOverlayEnum.FROST, BiomeOverlayEnum.MOSSY, BiomeOverlayEnum.AGED, BiomeOverlayEnum.SOOTY);
+  public static final EnumSet<BiomeOverlayEnum> SUPPORTED_OVERLAYS = EnumSet.of(BiomeOverlayEnum.NORMAL, BiomeOverlayEnum.FROST, BiomeOverlayEnum.MOSSY, BiomeOverlayEnum.AGED);
 
   @Override
   public EnumSet<BiomeOverlayEnum> getSupportedOverlays() {
@@ -559,6 +549,12 @@ public class StargatePegasusBaseTile extends StargateClassicBaseTile implements 
       case STARGATE_CHEVRON_FAIL:
         sendRenderingUpdate(EnumGateAction.CHEVRON_CLOSE, 0, false);
         dialingFailed(checkAddressAndEnergy(dialedAddress));
+        /*
+         *
+         * addTask(new ScheduledTask(EnumScheduledTask.STARGATE_ENGAGE, 0));
+         * addTask(new ScheduledTask(EnumScheduledTask.STARGATE_CHEVRON_DIM, 1));
+         *
+         */
 
         break;
 

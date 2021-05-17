@@ -1,11 +1,6 @@
 package mrjake.aunis.tileentity.stargate;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
@@ -180,7 +175,25 @@ public abstract class StargateAbstractBaseTile extends TileEntity implements Sta
   }
 
   public boolean canAcceptConnectionFrom(StargatePos targetGatePos) {
-    return isMerged && stargateState.idle();
+    //return isMerged; // && stargateState.idle(); //ahoj
+
+    boolean allowConnectToDialing = AunisConfig.stargateConfig.allowConnectToDialing;
+
+    if(allowConnectToDialing) {
+      if (isMerged && stargateState.idle()) {
+        return true;
+      }
+      if (isMerged && stargateState.dialing()) {
+        return true; // ahoj
+      }
+      if (isMerged && stargateState.dialingComputer()) {
+        return true;
+      }
+      return false;
+    }
+    else{
+      return isMerged && stargateState.idle();
+    }
   }
 
   protected void sendRenderingUpdate(EnumGateAction gateAction, int chevronCount, boolean modifyFinal) {
@@ -258,11 +271,13 @@ public abstract class StargateAbstractBaseTile extends TileEntity implements Sta
     if (!resultTarget.result.ok()) {
       dialingFailed(resultTarget.result);
 
-      // TODO Find a test case for resultTarget.targetVaild
-      //			if (resultTarget.targetVaild) {
-      //				// We can call dialing failed on the target gate
-      //				network.getStargate(dialedAddress).getTileEntity().dialingFailed(StargateOpenResult.CALLER_HUNG_UP);
-      //			}
+      /* TODO Find a test case for resultTarget.targetVaild
+
+       */
+      if (resultTarget.targetVaild) {
+        // We can call dialing failed on the target gate
+        network.getStargate(dialedAddress).getTileEntity().dialingFailed(StargateOpenResult.CALLER_HUNG_UP);
+      }
     }
 
     return resultTarget.result;
@@ -487,7 +502,11 @@ public abstract class StargateAbstractBaseTile extends TileEntity implements Sta
       int size = dialedAddress.size();
       if (size == 6) size++;
 
+
       network.getStargate(dialedAddress).getTileEntity().incomingWormhole(size);
+
+      network.getStargate(dialedAddress).getTileEntity().sendSignal(null, "stargate_incoming_wormhole", new Object[]{size});
+      network.getStargate(dialedAddress).getTileEntity().failGate();
     }
   }
 
@@ -501,6 +520,20 @@ public abstract class StargateAbstractBaseTile extends TileEntity implements Sta
     dialedAddress.clear();
 
     sendSignal(null, "stargate_incoming_wormhole", new Object[]{dialedAddressSize});
+
+    final int[] i = {1};
+    Timer timer = new Timer();
+    timer.schedule( new TimerTask() {
+      public void run() {
+        if(i[0] <= 2) {
+          sendSignal(null, "stargate_incoming_wormhole", new Object[]{dialedAddressSize});
+          i[0]++;
+        }
+        else{
+          timer.cancel();
+        }
+      }
+    }, 1000, 500);
   }
 
   protected int getOpenSoundDelay() {
@@ -515,28 +548,49 @@ public abstract class StargateAbstractBaseTile extends TileEntity implements Sta
    * @param isInitiating  True if gate is initializing the connection, false otherwise.
    */
   protected void openGate(StargatePos targetGatePos, boolean isInitiating) {
+
     this.isInitiating = isInitiating;
     this.targetGatePos = targetGatePos;
     this.stargateState = EnumStargateState.UNSTABLE;
 
-    sendRenderingUpdate(EnumGateAction.OPEN_GATE, 0, false);
-
-    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_OPEN_SOUND, getOpenSoundDelay()));
-    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_HORIZON_LIGHT_BLOCK, EnumScheduledTask.STARGATE_OPEN_SOUND.waitTicks + 19 + getTicksPerHorizonSegment(true)));
-    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_HORIZON_WIDEN, EnumScheduledTask.STARGATE_OPEN_SOUND.waitTicks + 23 + getTicksPerHorizonSegment(true))); // 1.3s of the sound to the kill
-    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_ENGAGE));
-
-    if (isInitiating) {
-      StargateEnergyRequired energyRequired = getEnergyRequiredToDial(targetGatePos);
-      getEnergyStorage().extractEnergy(energyRequired.energyToOpen, false);
-      keepAliveEnergyPerTick = energyRequired.keepAlive;
-    }
-
     ChunkManager.forceChunk(world, new ChunkPos(pos));
 
-    sendSignal(null, "stargate_open", new Object[]{isInitiating});
+    boolean allowIncomingAnimation = AunisConfig.stargateConfig.allowIncomingAnimations;
 
-    markDirty();
+    long waitTime = 2800;
+
+    if(!allowIncomingAnimation) {
+      waitTime = 300;
+    }
+    final int[] i = {1};
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      public void run() {
+        if(i[0] < 2) {
+
+          sendRenderingUpdate(EnumGateAction.OPEN_GATE, 0, false);
+
+          addTask(new ScheduledTask(EnumScheduledTask.STARGATE_OPEN_SOUND, getOpenSoundDelay()));
+          addTask(new ScheduledTask(EnumScheduledTask.STARGATE_HORIZON_LIGHT_BLOCK, EnumScheduledTask.STARGATE_OPEN_SOUND.waitTicks + 19 + getTicksPerHorizonSegment(true)));
+          addTask(new ScheduledTask(EnumScheduledTask.STARGATE_HORIZON_WIDEN, EnumScheduledTask.STARGATE_OPEN_SOUND.waitTicks + 23 + getTicksPerHorizonSegment(true))); // 1.3s of the sound to the kill
+          addTask(new ScheduledTask(EnumScheduledTask.STARGATE_ENGAGE));
+
+          if (isInitiating) {
+            StargateEnergyRequired energyRequired = getEnergyRequiredToDial(targetGatePos);
+            getEnergyStorage().extractEnergy(energyRequired.energyToOpen, false);
+            keepAliveEnergyPerTick = energyRequired.keepAlive;
+          }
+
+          sendSignal(null, "stargate_open", new Object[]{isInitiating});
+
+          markDirty();
+          i[0]++;
+        }
+        else{
+          timer.cancel();
+        }
+      }
+    }, waitTime, 100);
   }
 
   /**
@@ -568,15 +622,17 @@ public abstract class StargateAbstractBaseTile extends TileEntity implements Sta
    * Called on the failed dialing.
    */
   protected void dialingFailed(StargateOpenResult reason) {
-    sendSignal(null, "stargate_failed", new Object[]{reason.toString().toLowerCase()});
-    horizonFlashTask = null;
+    if(stargateState == EnumStargateState.DIALING || stargateState == EnumStargateState.DIALING_COMPUTER || stargateState == EnumStargateState.IDLE ) {
+      sendSignal(null, "stargate_failed", new Object[]{reason.toString().toLowerCase()});
+      horizonFlashTask = null;
 
-    new StargateDialFailEvent(this, reason).post();
+      new StargateDialFailEvent(this, reason).post();
 
-    addFailedTaskAndPlaySound();
-    stargateState = EnumStargateState.FAILING;
+      addFailedTaskAndPlaySound();
+      stargateState = EnumStargateState.FAILING;
 
-    markDirty();
+      markDirty();
+    }
   }
 
   protected void addFailedTaskAndPlaySound() {

@@ -2,7 +2,10 @@ package mrjake.aunis.tileentity.stargate;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import mrjake.aunis.Aunis;
 import mrjake.aunis.config.AunisConfig;
 import mrjake.aunis.config.StargateSizeEnum;
 import mrjake.aunis.packet.AunisPacketHandler;
@@ -16,9 +19,7 @@ import mrjake.aunis.sound.SoundEventEnum;
 import mrjake.aunis.sound.SoundPositionedEnum;
 import mrjake.aunis.sound.StargateSoundEventEnum;
 import mrjake.aunis.sound.StargateSoundPositionedEnum;
-import mrjake.aunis.stargate.EnumScheduledTask;
-import mrjake.aunis.stargate.EnumStargateState;
-import mrjake.aunis.stargate.StargateOpenResult;
+import mrjake.aunis.stargate.*;
 import mrjake.aunis.stargate.merging.StargateAbstractMergeHelper;
 import mrjake.aunis.stargate.merging.StargateUniverseMergeHelper;
 import mrjake.aunis.stargate.network.StargateAddress;
@@ -28,15 +29,14 @@ import mrjake.aunis.stargate.network.SymbolInterface;
 import mrjake.aunis.stargate.network.SymbolTypeEnum;
 import mrjake.aunis.stargate.network.SymbolUniverseEnum;
 import mrjake.aunis.stargate.power.StargateEnergyRequired;
-import mrjake.aunis.state.StargateRendererActionState;
+import mrjake.aunis.state.*;
 import mrjake.aunis.state.StargateRendererActionState.EnumGateAction;
-import mrjake.aunis.state.StargateUniverseSymbolState;
-import mrjake.aunis.state.State;
-import mrjake.aunis.state.StateTypeEnum;
 import mrjake.aunis.tileentity.util.ScheduledTask;
 import mrjake.aunis.util.AunisAxisAlignedBB;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+
+import static mrjake.aunis.stargate.network.SymbolUniverseEnum.TOP_CHEVRON;
 
 public class StargateUniverseBaseTile extends StargateClassicBaseTile {
 
@@ -57,7 +57,7 @@ public class StargateUniverseBaseTile extends StargateClassicBaseTile {
     stargateState = EnumStargateState.DIALING;
 
     AunisSoundHelper.playSoundEvent(world, getGateCenterPos(), SoundEventEnum.GATE_UNIVERSE_DIAL_START);
-    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_DIAL_NEXT, 30));
+    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_DIAL_NEXT, 7));
     sendRenderingUpdate(EnumGateAction.LIGHT_UP_CHEVRONS, 9, true);
     updateChevronLight(9, true);
 
@@ -73,16 +73,17 @@ public class StargateUniverseBaseTile extends StargateClassicBaseTile {
   public void failGate() {
     super.failGate();
 
-    if (targetRingSymbol != SymbolUniverseEnum.TOP_CHEVRON)
-      addSymbolToAddressManual(SymbolUniverseEnum.TOP_CHEVRON, null);
+    if (targetRingSymbol != TOP_CHEVRON)
+      addSymbolToAddressManual(TOP_CHEVRON, null);
   }
 
   @Override
   protected void disconnectGate() {
     super.disconnectGate();
 
-    if (targetRingSymbol != SymbolUniverseEnum.TOP_CHEVRON)
-      addSymbolToAddressManual(SymbolUniverseEnum.TOP_CHEVRON, null);
+    /*if (targetRingSymbol != TOP_CHEVRON)
+      addSymbolToAddressManual(TOP_CHEVRON, null);*/
+    addSymbolToAddressManual(TOP_CHEVRON, null);
   }
 
   @Override
@@ -96,14 +97,59 @@ public class StargateUniverseBaseTile extends StargateClassicBaseTile {
 
       NBTTagCompound taskData = new NBTTagCompound();
       taskData.setInteger("symbolToDial", targetSymbol.getId());
-      addTask(new ScheduledTask(EnumScheduledTask.STARGATE_DIAL_NEXT, 30, taskData));
+      addTask(new ScheduledTask(EnumScheduledTask.STARGATE_DIAL_NEXT, 7, taskData));
       ringSpinContext = context;
     } else super.addSymbolToAddressManual(targetSymbol, context);
   }
 
   @Override
-  public void incomingWormhole(int dialedAddressSize) {
+  public void incomingWormhole(int dialedAddressSize){
+    prepareGateToConnect(dialedAddressSize);
+
     super.incomingWormhole(9);
+  }
+
+  public void prepareGateToConnect(int dialedAddressSize){
+    // do spin animation
+    boolean allowIncomingAnimation = AunisConfig.stargateConfig.allowIncomingAnimations;
+
+    if(allowIncomingAnimation) {
+    /*if(stargateState == EnumStargateState.IDLE) {
+      dialedAddress.clear();
+      dialedAddress.addSymbol(SymbolUniverseEnum.TOP_CHEVRON);
+      addTask(new ScheduledTask(EnumScheduledTask.STARGATE_DIAL_NEXT, 0));
+    }*/
+      final int[] i = {1};
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        public void run() {
+          if (i[0] <= 1) {
+            sendRenderingUpdate(EnumGateAction.LIGHT_UP_CHEVRONS, 9, true);
+            sendSignal(null, "stargate_incoming_wormhole", new Object[]{dialedAddressSize});
+            i[0]++;
+          } else {
+            timer.cancel();
+          }
+        }
+      }, 400, 100);
+
+      playSoundEvent(StargateSoundEventEnum.INCOMING);
+    }
+    else{
+      final int[] i = {1};
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        public void run() {
+          if (i[0] <= 2) {
+            sendRenderingUpdate(EnumGateAction.LIGHT_UP_CHEVRONS, dialedAddressSize, false);
+            i[0]++;
+          } else {
+            timer.cancel();
+          }
+        }
+      }, 0, 100);
+      playSoundEvent(StargateSoundEventEnum.INCOMING);
+    }
   }
 
   @Override
@@ -113,8 +159,8 @@ public class StargateUniverseBaseTile extends StargateClassicBaseTile {
 
   @Override
   protected void addFailedTaskAndPlaySound() {
-    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_FAIL, 80));
-    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_FAILED_SOUND, 40));
+    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_FAIL, 20));
+    addTask(new ScheduledTask(EnumScheduledTask.STARGATE_FAILED_SOUND, 20));
   }
 
   @Override
@@ -151,18 +197,18 @@ public class StargateUniverseBaseTile extends StargateClassicBaseTile {
         break;
 
       case STARGATE_SPIN_FINISHED:
-        if (targetRingSymbol != SymbolUniverseEnum.TOP_CHEVRON) {
+        if (targetRingSymbol != TOP_CHEVRON) {
           if (canAddSymbol(targetRingSymbol) && !abortDialing) {
             addSymbolToAddress(targetRingSymbol);
             activateSymbolServer(targetRingSymbol);
 
             if (stargateState.dialingComputer()) {
               stargateState = EnumStargateState.IDLE;
-              addTask(new ScheduledTask(EnumScheduledTask.STARGATE_DIAL_FINISHED, 15));
+              addTask(new ScheduledTask(EnumScheduledTask.STARGATE_DIAL_FINISHED, 10));
             } else {
 
               if (!stargateWillLock(targetRingSymbol))
-                addTask(new ScheduledTask(EnumScheduledTask.STARGATE_DIAL_NEXT, 30));
+                addTask(new ScheduledTask(EnumScheduledTask.STARGATE_DIAL_NEXT, 7));
               else {
                 attemptOpenAndFail();
               }
@@ -339,7 +385,7 @@ public class StargateUniverseBaseTile extends StargateClassicBaseTile {
       case CHEVRON_OPEN:
         return SoundEventEnum.GATE_MILKYWAY_CHEVRON_OPEN;
       case CHEVRON_SHUT:
-        return targetRingSymbol == SymbolUniverseEnum.TOP_CHEVRON ? SoundEventEnum.GATE_UNIVERSE_CHEVRON_TOP_LOCK : SoundEventEnum.GATE_UNIVERSE_CHEVRON_LOCK;
+        return targetRingSymbol == TOP_CHEVRON ? SoundEventEnum.GATE_UNIVERSE_CHEVRON_TOP_LOCK : SoundEventEnum.GATE_UNIVERSE_CHEVRON_LOCK;
     }
 
     return null;

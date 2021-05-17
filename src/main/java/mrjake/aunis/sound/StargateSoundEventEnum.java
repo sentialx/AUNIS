@@ -8,4 +8,6 @@ public enum StargateSoundEventEnum {
 
 	CHEVRON_OPEN,
 	CHEVRON_SHUT,
+	PEGASUS_INCOMING,
+    ;
 }
