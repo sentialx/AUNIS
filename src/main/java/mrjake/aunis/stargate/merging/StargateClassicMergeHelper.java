@@ -80,6 +80,7 @@ public abstract class StargateClassicMergeHelper extends StargateAbstractMergeHe
 	 * @param basePos     Position of {@link StargateMilkyWayBaseBlock} the tiles should be linked to.
 	 * @param baseFacing  Facing of {@link StargateMilkyWayBaseBlock}.
 	 */
+	@Override
 	public void updateMembersBasePos(IBlockAccess blockAccess, BlockPos basePos, EnumFacing baseFacing) {
 		for (BlockPos pos : getRingBlocks())
 			updateMemberBasePos(blockAccess, pos.rotate(FacingToRotation.get(baseFacing)).add(basePos), basePos, baseFacing);

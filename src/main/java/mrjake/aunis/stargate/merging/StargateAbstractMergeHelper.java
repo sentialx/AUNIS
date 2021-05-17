@@ -208,4 +208,7 @@ public abstract class StargateAbstractMergeHelper {
 		for (BlockPos pos : getChevronBlocks())
 			updateMemberMergeStatus(world, pos, basePos, baseFacing, shouldBeMerged);
 	}
+
+	public void updateMembersBasePos(IBlockAccess blockAccess, BlockPos basePos, EnumFacing baseFacing) {
+	}
 }
