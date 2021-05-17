@@ -293,30 +293,9 @@ public class StargateUniverseBaseTile extends StargateClassicBaseTile {
 	// Teleportation
 
 	@Override
-	protected AunisAxisAlignedBB getHorizonTeleportBox(boolean server) {
-		return StargateSizeEnum.SMALL.teleportBox;
-	}
-
-	@Override
 	public BlockPos getGateCenterPos() {
 		return pos.up(4);
 	}
-
-	@Override
-	protected AunisAxisAlignedBB getHorizonKillingBox(boolean server) {
-		return StargateSizeEnum.SMALL.killingBox;
-	}
-
-	@Override
-	protected int getHorizonSegmentCount(boolean server) {
-		return StargateSizeEnum.SMALL.horizonSegmentCount;
-	}
-
-	@Override
-	protected List<AunisAxisAlignedBB> getGateVaporizingBoxes(boolean server) {
-		return StargateSizeEnum.SMALL.gateVaporizingBoxes;
-	}
-
 
 	// --------------------------------------------------------------------------------
 	// Sounds
