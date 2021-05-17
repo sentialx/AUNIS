@@ -102,6 +102,16 @@ public class StargateMilkyWayBaseTile extends StargateClassicDHDLinkableBaseTile
 		return StargateMilkyWayMergeHelper.INSTANCE;
 	}
 
+	@Override
+	protected boolean onGateMergeRequested() {
+		if (stargateSize != AunisConfig.stargateSize) {
+			StargateMilkyWayMergeHelper.INSTANCE.convertToPattern(world, pos, facing, stargateSize, AunisConfig.stargateSize);
+			stargateSize = AunisConfig.stargateSize;
+		}
+
+		return StargateMilkyWayMergeHelper.INSTANCE.checkBlocks(world, pos, facing);
+	}
+
 	// ------------------------------------------------------------------------
 	// NBT
 
@@ -167,29 +177,7 @@ public class StargateMilkyWayBaseTile extends StargateClassicDHDLinkableBaseTile
 	public BlockPos getGateCenterPos() {
 		return pos.offset(EnumFacing.UP, 4);
 	}
-
-	private boolean firstTick = true;
-
-	@Override
-	public void update() {
-		super.update();
-
-		if (!world.isRemote) {
-			if (firstTick) {
-				firstTick = false;
-
-				// Doing this in onLoad causes ConcurrentModificationException
-				if (stargateSize != AunisConfig.stargateSize && isMerged()) {
-					StargateMilkyWayMergeHelper.INSTANCE.convertToPattern(world, pos, facing, stargateSize, AunisConfig.stargateSize);
-					updateMergeState(StargateMilkyWayMergeHelper.INSTANCE.checkBlocks(world, pos, facing), facing);
-
-					stargateSize = AunisConfig.stargateSize;
-					markDirty();
-				}
-			}
-		}
-	}
-
+	
 	public static final EnumSet<BiomeOverlayEnum> SUPPORTED_OVERLAYS = EnumSet.of(
 		BiomeOverlayEnum.NORMAL,
 		BiomeOverlayEnum.FROST,

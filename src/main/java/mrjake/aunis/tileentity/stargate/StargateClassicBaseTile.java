@@ -166,8 +166,9 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 		BeamerLinkingHelper.findBeamersInFront(world, pos, facing);
 		updateBeamers();
 	}
-
-
+	
+	protected abstract boolean onGateMergeRequested();
+	
 	// ------------------------------------------------------------------------
 	// Loading and ticking
 
@@ -181,11 +182,22 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 		}
 	}
 
+	private BlockPos lastPos = BlockPos.ORIGIN;
+	
 	@Override
 	public void update() {
 		super.update();
 
 		if (!world.isRemote) {
+			if (!lastPos.equals(pos)) {
+				lastPos = pos;
+				generateAddresses(!hasUpgrade(StargateClassicBaseTile.StargateUpgradeEnum.CHEVRON_UPGRADE));
+
+				if (isMerged()) {
+					updateMergeState(onGateMergeRequested(), facing);
+				}
+			}
+
 			if (givePageTask != null) {
 				if (givePageTask.update(world.getTotalWorldTime())) {
 					givePageTask = null;
